@@ -93,12 +93,12 @@ const Banner = () => {
                       transition={{ duration: 0.7 }}
                       className="flex-col justify-center md:justify-start mt-6"
                     >
-                      <button
+                      {/* <button
                         className="py-3 px-5 border-2 text-nowrap"
                         style={{ borderColor: "#c9ab81" }}
                       >
                         Shop Now
-                      </button>
+                      </button> */}
                     </motion.div>
                   </motion.div>
                 </div>

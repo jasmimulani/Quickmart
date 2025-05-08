@@ -8,7 +8,7 @@ const App = () => {
     <>
     <Navbar/>
     <Pagerender1/>
-    {/* <Footer/> */}
+    <Footer/>
     
     </>
   )

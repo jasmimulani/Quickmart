@@ -9,8 +9,8 @@ const Pagerender1 = () => {
    <>
    <Baneer/>
    <Shopcategories/>
-   <Bestproduct/>
    <Service/>
+   <Bestproduct/>
    </>
   )
 }

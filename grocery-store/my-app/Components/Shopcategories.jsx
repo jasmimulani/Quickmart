@@ -5,9 +5,9 @@ const Shopcategories = () => {
   return (
     <div className="w-full">
       <div className="mb-6">
-        <h1 className="text-4xl flex justify-start mx:justify-center ml-6 font-semibold text-gray-800">
+        <h2 className="text-3xl font-extrabold text-gray-900 text-center sm:text-4xl">
           Shop by Categories
-        </h1>
+        </h2>
       </div>
       <section className="bg-white">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-6">

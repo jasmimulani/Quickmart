@@ -50,7 +50,7 @@ const Bestproduct = () => {
           {products.map((product) => (
             <div
               key={product.id}
-              className="bg-white shadow-md rounded-lg overflow-hidden"
+              className="bg-white shadow-md rounded-lg overflow-hidden "
             >
               <img
                 className="w-full h-48 object-cover "
@@ -62,7 +62,7 @@ const Bestproduct = () => {
                   {product.name}
                 </h3>
                 <p className="text-gray-600 text-sm">{product.description}</p>
-                <button className="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <button className="mt-3 bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                Shop Now
                 </button>
               </div>

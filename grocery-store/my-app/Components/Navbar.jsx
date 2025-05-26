@@ -8,7 +8,8 @@ const Navbar = () => {
     <nav className="bg-white shadow-md z-50 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          <h2 className="text-3xl font-extrabold text-gray-900  sm:text-3xl">Grocary Shoping</h2>
+          <h2 className="text-3xl  text-blue-800  sm:text-3xl">BlueCart</h2>
+
 
           <div className="hidden md:flex space-x-8 items-center">
             <a

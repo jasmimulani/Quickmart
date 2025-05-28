@@ -13,15 +13,15 @@ const Navbar = () => {
   }
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
-      <NavLink to="/">
-        <h2 className="text-2xl text-primary-dull font-bold">Green Basket</h2>
+      <NavLink to="/" onClick={() => setOpen(false)}>
+        <h2 className="text-2xl text-primary-dull font-bold ">Green Basket</h2>
       </NavLink>
 
       <div className="hidden sm:flex items-center gap-8">
         <NavLink to="/">Home </NavLink>
         <NavLink to="/products">Product</NavLink>
-        <NavLink to="/">About </NavLink>
-        <NavLink to="/">Contact </NavLink>
+        <NavLink to="/about">About </NavLink>
+        <NavLink to="/contact">Contact </NavLink>
 
         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
           <input
@@ -32,7 +32,7 @@ const Navbar = () => {
           <img src={assets.search_icon} alt="search" className="w-4 h-4"/>
         </div>
 
-        <div className="relative cursor-pointer">
+        <div onClick={() => navigate("/cart")} className="relative cursor-pointer">
            <img src={assets.nav_cart_icon} alt='cart' className="w-6 opacity-80"/>
           <button className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] h-[18px] rounded-full">
             3

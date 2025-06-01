@@ -6,11 +6,11 @@ import toast from "react-hot-toast";
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
-  const currency = import.meta.VITE_CURRENCY;
+  const currency = import.meta.env.VITE_CURRENCY;
 
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [isSeller, SetISSeller] = useState(false);
+  const [isSeller, SetIsSeller] = useState(true);
   const [showUserLogin, SetShowUserLogin] = useState(false);
   const [products, SetProducts] = useState([]);
 
@@ -97,7 +97,7 @@ export const AppContextProvider = ({ children }) => {
     navigate,
     user,
     setUser,
-    SetISSeller,
+    SetIsSeller,
     isSeller,
     showUserLogin,
     SetShowUserLogin,

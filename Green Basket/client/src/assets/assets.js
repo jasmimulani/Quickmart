@@ -225,7 +225,7 @@ export const dummyProducts = [
     category: "Vegetables",
     price: 40,
     offerPrice: 35,
-    image: [tomato_image],
+    image: [tomato_image ],
     description: [
       "Juicy and ripe",
       "Rich in Vitamin C",

@@ -8,7 +8,5 @@ export const updateCart = async (req,res) =>{
     } catch (error) {
         console.log(error.message);
         res.json({succses:false , message:error.message})
-        
-        
     }
 }

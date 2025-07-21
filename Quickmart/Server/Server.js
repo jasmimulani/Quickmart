@@ -6,8 +6,8 @@ import 'dotenv/config';
 import userRouter from './routes/userRoute.js';
 import sellerRouter from './routes/sellerRoute.js';
 import connectClodinary from './Configs/clodinary.js';
-import ProductRoute from './routes/ProductRoute.js';
 import productRoute from './routes/ProductRoute.js';
+import cartRouter from './routes/cartRoute.js';
 
 const app = express();
 const port = process.env.PORT || 7000;
@@ -28,6 +28,7 @@ app.get('/',(req,res) =>res.send("api is working"));
 app.use('/api/user' , userRouter)
 app.use('/api/seller' , sellerRouter)
 app.use('/api/product' , productRoute)
+app.use('/api/cart' , cartRouter)
 
 
 app.listen(port,() =>{

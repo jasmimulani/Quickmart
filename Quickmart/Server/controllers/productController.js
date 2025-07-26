@@ -1,13 +1,11 @@
 import{v2 as clodinary} from 'cloudinary'
 import Product from '../models/product.js'
 
-//  add product  
+
 export const addProduct = async (req,res) =>{
-  try {
-    let productData = json.parse(req.body.productData)
-
+  try { 
+    const productData = JSON.parse(req.body.productData);
     const images = req.files
-
          let imagesUrl = await Promise.all(
             images.map(async (item) =>{
            let result = await clodinary.uploader.upload(item.path, {resource_type: 'image'});
@@ -15,17 +13,50 @@ export const addProduct = async (req,res) =>{
             })
         )
 
-      await Product.create({...productData, image: imagesUrl})
+        productData.offerprice = productData.offerPrice;
+       delete productData.offerPrice;
 
-       res.json({success: true , message:'product added'})
-         
-    
-  } catch (error) {
-    console.log(error.message);
-    return res.json({success:false , message: error.message})
-    
-  }
+await Product.create({ ...productData, image: imagesUrl });
+      // await Product.create({...productData, image: imagesUrl})
+
+      res.json({ success: true, message: "Product added successfully!" });
+    } catch (error) {
+      res.status(400).json({ success: false, message: error.message });
+    }
 } 
+
+
+// export const addProduct = async (req, res) => {
+//   try {
+//     console.log("REQ.BODY:", req.body);
+//     console.log("REQ.FILES:", req.files);
+
+//     const productData = JSON.parse(req.body.productData);
+
+//     const images = req.files;
+//     if (!images || images.length === 0) {
+//       return res.status(400).json({ success: false, message: "No images uploaded" });
+//     }
+
+//     let imagesUrl = await Promise.all(
+//       images.map(async (item) => {
+//         let result = await clodinary.uploader.upload(item.path, { resource_type: "image" });
+//         return result.secure_url;
+//       })
+//     );
+
+//     productData.offerprice = productData.offerPrice;
+// delete productData.offerPrice;
+
+// await Product.create({ ...productData, image: imagesUrl });
+
+
+//     res.json({ success: true, message: "Product added successfully!" });
+//   } catch (error) {
+//     console.error("ADD PRODUCT ERROR:", error);
+//     res.status(400).json({ success: false, message: error.message });
+//   }
+// };
 
 
 //  get product  

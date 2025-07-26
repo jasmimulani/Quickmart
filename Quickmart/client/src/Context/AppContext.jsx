@@ -2,11 +2,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dummyProducts } from "../assets/assets";
 import toast from "react-hot-toast";
-import axios, { Axios } from 'axios';
-
+import axios from "axios"
 
 axios.defaults.withCredentials = true;
- axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
 export const AppContext = createContext();
 
@@ -15,12 +14,26 @@ export const AppContextProvider = ({ children }) => {
 
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [isSeller, SetIsSeller] = useState(true);
+  const [isSeller, SetIsSeller] = useState(false);
   const [showUserLogin, SetShowUserLogin] = useState(false);
   const [products, SetProducts] = useState([]);
 
   const [cartItems, SetCartItems] = useState({});
   const [searchQuery, SetSearchQuery] = useState({});
+
+  //  fetch seller satus
+  const fetchSeller = async () => {
+    try {
+      const { data } = await axios.get("/api/seller/is-auth");
+      if (data.success) {
+        SetIsSeller(true);
+      } else {
+        SetIsSeller(false);
+      }
+    } catch (error) {
+     SetIsSeller(false);
+    }
+   };
 
   // fetch product
 
@@ -54,48 +67,42 @@ export const AppContextProvider = ({ children }) => {
 
   const removeFromeCart = (itemId) => {
     let cartData = structuredClone(cartItems);
-    if(cartData[itemId]){
-      cartData[itemId] -=1;
-      if(cartData[itemId] === 0 ){
+    if (cartData[itemId]) {
+      cartData[itemId] -= 1;
+      if (cartData[itemId] === 0) {
         delete cartData[itemId];
       }
     }
-     toast.success("Remove from Cart.")
-     SetCartItems(cartData)
+    toast.success("Remove from Cart.");
+    SetCartItems(cartData);
   };
 
   //  get cart item
 
-   const getCartCount = () =>{
+  const getCartCount = () => {
     let totalCount = 0;
-    for(const item in cartItems){
-      totalCount +=cartItems[item];
+    for (const item in cartItems) {
+      totalCount += cartItems[item];
     }
     return totalCount;
-   }
+  };
 
+  //   get cart total
 
-    //   get cart total
-
-    const getCartAmount = ()=>{
-      let totalAmount = 0;
-      for(const items in cartItems){
-        let itemInfo = products.find((product) => product._id === items)
-        if(cartItems[items] > 0){
-          totalAmount += itemInfo.offerPrice * cartItems[items]
-        }
+  const getCartAmount = () => {
+    let totalAmount = 0;
+    for (const items in cartItems) {
+      let itemInfo = products.find((product) => product._id === items);
+      if (cartItems[items] > 0) {
+        totalAmount += itemInfo.offerPrice * cartItems[items];
       }
-      return Math.floor(totalAmount * 100) / 100;
     }
-
-
-
-
-
-
+    return Math.floor(totalAmount * 100) / 100;
+  };
 
   useEffect(() => {
-    fetchProducts();
+    fetchSeller()
+    fetchProducts()
   }, []);
 
   const value = {
@@ -114,10 +121,9 @@ export const AppContextProvider = ({ children }) => {
     cartItems,
     searchQuery,
     SetSearchQuery,
-     getCartAmount,
-     getCartCount ,
-     axios
-   
+    getCartAmount,
+    getCartCount,
+   axios
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

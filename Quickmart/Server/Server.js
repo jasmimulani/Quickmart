@@ -17,13 +17,17 @@ const port = process.env.PORT || 7000;
 await connectDB()
 await connectClodinary()
 
-// allow multiple origins
-const allowedOrigins = ['http://localhost:5173']
+
 
 //  middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({origin:allowedOrigins , Credentials:true}));
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  credentials: true
+}));
+
+
 
 
 app.get('/',(req,res) =>res.send("api is working"));

@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useAppContext } from "../Context/AppContext";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import { assets } from "../assets/assets";
-import { Link } from "react-router-dom";
 import ProductCard from "../Components/ProductCard";
 
 const ProductDetails = () => {
@@ -16,14 +15,14 @@ const ProductDetails = () => {
   const product = products.find((item) => item._id === id);
 
   useEffect(() => {
-    if (products.length > 0) {
+    if (products.length > 0 && product) {
       let productsCopy = products.slice();
       productsCopy = productsCopy.filter(
-        (item) => product.category === item.category
+        (item) => product.category === item.category && item._id !== product._id
       );
       setRelatedProduct(productsCopy.slice(0, 5));
     }
-  }, [products]);
+  }, [products, product]);
 
   useEffect(() => {
     setThumbnail(product?.image[0] ? product.image[0] : null);
@@ -44,13 +43,13 @@ const ProductDetails = () => {
         <div className="flex flex-col md:flex-row gap-16 mt-4">
           <div className="flex gap-3">
             <div className="flex flex-col gap-3">
-              {product.image.map((image, index) => (
+              {product.image.map((image) => (
                 <div
-                  key={index}
+                  key={image}
                   onClick={() => setThumbnail(image)}
                   className="border max-w-24 border-gray-500/30 rounded overflow-hidden cursor-pointer"
                 >
-                  <img src={image} alt={`Thumbnail ${index + 1}`} />
+                  <img src={image} alt="Thumbnail" />
                 </div>
               ))}
             </div>
@@ -68,8 +67,9 @@ const ProductDetails = () => {
                 .fill("")
                 .map((_, i) => (
                   <img
+                    key={i}
                     src={i < 4 ? assets.star_icon : assets.star_dull_icon}
-                    alt=""
+                    alt="star"
                     className="md:w-4 w-3.5"
                   />
                 ))}
@@ -81,15 +81,15 @@ const ProductDetails = () => {
                 MRP: {currency} {product.price}
               </p>
               <p className="text-2xl font-medium">
-                MRP:{currency} {product.offerPrice}
+                MRP: {currency} {product.offerPrice}
               </p>
               <span className="text-gray-500/70">(inclusive of all taxes)</span>
             </div>
 
             <p className="text-base font-medium mt-6">About Product</p>
             <ul className="list-disc ml-4 text-gray-500/70">
-              {product.description.map((desc, index) => (
-                <li key={index}>{desc}</li>
+              {product.description.map((desc) => (
+                <li key={desc}>{desc}</li>
               ))}
             </ul>
 
@@ -112,7 +112,8 @@ const ProductDetails = () => {
             </div>
           </div>
         </div>
-        {/* for related product */}
+
+        {/* Related Products */}
         <div className="flex flex-col items-center mt-20">
           <div className="flex flex-col items-center w-max">
             <p className="text-3xl font-medium">Related Products</p>
@@ -120,9 +121,9 @@ const ProductDetails = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 lg:grid-cols-4 mt-6 w-full">
             {relatedProduct
-              .filter((product) => product.inStock)
-              .map((product, index) => (
-                <ProductCard key={index} product={product} />
+              .filter((item) => item.inStock)
+              .map((item) => (
+                <ProductCard key={item._id} product={item} />
               ))}
           </div>
           <button

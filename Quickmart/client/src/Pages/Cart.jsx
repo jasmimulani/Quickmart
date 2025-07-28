@@ -30,9 +30,7 @@ const Cart = () => {
     setCartArray(tempArray);
   };
 
-   const PlaceOrder = async() =>{
-
-   }
+  const PlaceOrder = async () => {};
 
   useEffect(() => {
     if (products.length > 0 && cartItems) {
@@ -45,9 +43,7 @@ const Cart = () => {
       <div className="flex-1 max-w-4xl">
         <h1 className="text-3xl font-medium mb-6">
           Shopping Cart{" "}
-          <span className="text-sm text-primary">
-            {getCartCount()} Items
-          </span>
+          <span className="text-sm text-primary">{getCartCount()} Items</span>
         </h1>
 
         <div className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 text-base font-medium pb-3">
@@ -56,9 +52,9 @@ const Cart = () => {
           <p className="text-center">Action</p>
         </div>
 
-        {cartArray.map((product, index) => (
+        {cartArray.map((product) => (
           <div
-            key={index}
+            key={product._id}
             className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3"
           >
             <div className="flex items-center md:gap-6 gap-3">
@@ -85,7 +81,13 @@ const Cart = () => {
                   </p>
                   <div className="flex items-center">
                     <p>Qty:</p>
-                    <select onChange={(e) => updateCartItem(product._id,Number(e.target.value))} value={cartItems[product._id]} className="outline-none">
+                    <select
+                      onChange={(e) =>
+                        updateCartItem(product._id, Number(e.target.value))
+                      }
+                      value={cartItems[product._id]}
+                      className="outline-none"
+                    >
                       {Array(
                         cartItems[product._id] > 9 ? cartItems[product._id] : 9
                       )
@@ -102,7 +104,7 @@ const Cart = () => {
             </div>
             <p className="text-center">
               {currency}
-              {product.offerPrice * product.quantity}
+              {product.offerprice * product.quantity}
             </p>
             <button
               onClick={() => removeFromeCart(product._id)}
@@ -155,13 +157,15 @@ const Cart = () => {
               <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
                 {addresses.map((address, index) => (
                   <p
+                    key={address.id || index}
                     onClick={() => {
                       setSelectAdress(address);
                       setShowAddress(false);
                     }}
                     className="text-gray-500 p-2 hover:bg-gray-100"
                   >
-                    {selectAddress.street},{selectAddress.city},{selectAddress.state},{selectAddress.country}
+                    {address.street},{address.city},{address.state},
+                    {address.country}
                   </p>
                 ))}
 

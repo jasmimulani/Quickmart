@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { assets, dummyAddress } from "../assets/assets";
+import { assets } from "../assets/assets";
 import { useAppContext } from "../Context/AppContext";
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const {
@@ -12,12 +13,14 @@ const Cart = () => {
     updateCartItem,
     navigate,
     getCartAmount,
+    axios,
+    user
   } = useAppContext();
 
   const [cartArray, setCartArray] = useState([]);
-  const [addresses, setAddress] = useState([dummyAddress]);
+  const [addresses, setAddress] = useState([]);
   const [showAddress, setShowAddress] = useState(false);
-  const [selectAddress, setSelectAdress] = useState(dummyAddress[0]);
+  const [selectAddress, setSelectAdress] = useState(null);
   const [paymentOption, setPaymentOption] = useState("COD");
 
   const getCart = () => {
@@ -30,13 +33,42 @@ const Cart = () => {
     setCartArray(tempArray);
   };
 
-  const PlaceOrder = async () => {};
+
+  const getUserAddress = async () =>{
+     try {
+
+       const { data } = await axios.get('/api/address/get');
+       if (data.success) {
+  setAddress(data.address);
+  if (data.address.length > 0) {
+    setSelectAdress(data.address[0]);
+  }
+       }else{
+        toast.error(data.message)
+       }
+      
+     } catch (error) {
+        toast.error(error.message)
+     }
+  }
+
+  const PlaceOrder = async () => {
+
+  };
 
   useEffect(() => {
     if (products.length > 0 && cartItems) {
       getCart();
     }
   }, [products, cartItems]);
+
+
+
+  useEffect(() =>{
+    if(user) {
+      getUserAddress()
+    }
+  },[user])
 
   return products.length > 0 && cartItems ? (
     <div className="flex flex-col md:flex-row mt-16">
@@ -144,8 +176,9 @@ const Cart = () => {
           <div className="relative flex justify-between items-start mt-2">
             <p className="text-gray-500">
               {selectAddress
-                ? `${selectAddress.street},${selectAddress.city},${selectAddress.state},${selectAddress.country}`
-                : "No address found"}
+  ? `${selectAddress.street || ""}, ${selectAddress.city || ""}, ${selectAddress.state || ""}, ${selectAddress.country || ""}`
+  : "No address found"}
+
             </p>
             <button
               onClick={() => setShowAddress(!showAddress)}

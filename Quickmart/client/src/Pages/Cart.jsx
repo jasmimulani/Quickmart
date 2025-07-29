@@ -14,7 +14,8 @@ const Cart = () => {
     navigate,
     getCartAmount,
     axios,
-    user
+    user,
+    SetCartItems,
   } = useAppContext();
 
   const [cartArray, setCartArray] = useState([]);
@@ -33,27 +34,49 @@ const Cart = () => {
     setCartArray(tempArray);
   };
 
-
-  const getUserAddress = async () =>{
-     try {
-
-       const { data } = await axios.get('/api/address/get');
-       if (data.success) {
-  setAddress(data.address);
-  if (data.address.length > 0) {
-    setSelectAdress(data.address[0]);
-  }
-       }else{
-        toast.error(data.message)
-       }
-      
-     } catch (error) {
-        toast.error(error.message)
-     }
-  }
+  const getUserAddress = async () => {
+    try {
+      const { data } = await axios.get("/api/address/get");
+      if (data.success) {
+        setAddress(data.address);
+        if (data.address.length > 0) {
+          setSelectAdress(data.address[0]);
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const PlaceOrder = async () => {
+    try {
+      if (!selectAddress) {
+        return toast.error("please select addres");
+      }
+      //    with cod
+      if (paymentOption === "COD") {
+        const { data } = await axios.post("/api/order/cod", {
+          userId: user._id,
+          items: cartArray.map((item) => ({
+            product: item._id,
+            quantity: item.quantity,
+          })),
+          address: selectAddress._id,
+        });
 
+        if (data.success) {
+          toast.success(data.message);
+          SetCartItems({});
+          navigate("/my-orders");
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
@@ -62,13 +85,11 @@ const Cart = () => {
     }
   }, [products, cartItems]);
 
-
-
-  useEffect(() =>{
-    if(user) {
-      getUserAddress()
+  useEffect(() => {
+    if (user) {
+      getUserAddress();
     }
-  },[user])
+  }, [user]);
 
   return products.length > 0 && cartItems ? (
     <div className="flex flex-col md:flex-row mt-16">
@@ -176,9 +197,12 @@ const Cart = () => {
           <div className="relative flex justify-between items-start mt-2">
             <p className="text-gray-500">
               {selectAddress
-  ? `${selectAddress.street || ""}, ${selectAddress.city || ""}, ${selectAddress.state || ""}, ${selectAddress.country || ""}`
-  : "No address found"}
-
+                ? `${selectAddress.street || ""}, ${
+                    selectAddress.city || ""
+                  }, ${selectAddress.state || ""}, ${
+                    selectAddress.country || ""
+                  }`
+                : "No address found"}
             </p>
             <button
               onClick={() => setShowAddress(!showAddress)}
@@ -237,23 +261,27 @@ const Cart = () => {
             <span>Shipping Fee</span>
             <span className="text-green-600">Free</span>
           </p>
-          <p className="flex justify-between">
-            <span>Tax (2%)</span>
-            <span>
-              {currency}
-              {getCartAmount() + (getCartAmount() * 2) / 100}
-            </span>
-          </p>
-          <p className="flex justify-between text-lg font-medium mt-3">
-            <span>Total Amount:</span>
-            <span>
-              {currency}
-              {getCartAmount()}
-            </span>
-          </p>
+         <p className="flex justify-between">
+  <span>Tax (2%)</span>
+  <span>
+    {currency}
+    {getCartAmount() + (getCartAmount() * 2) / 100}
+  </span>
+</p>
+<p className="flex justify-between text-lg font-medium mt-3">
+  <span>Total Amount:</span>
+  <span>
+    {currency}
+    {getCartAmount()}
+  </span>
+</p>
+
         </div>
 
-        <button className="w-full py-3 mt-6 cursor-pointer bg-primary text-white font-medium hover:bg-primary-dull transition">
+        <button
+          onClick={PlaceOrder}
+          className="w-full py-3 mt-6 cursor-pointer bg-primary text-white font-medium hover:bg-primary-dull transition"
+        >
           {paymentOption === "COD" ? "Place Order" : "Proceed to Checkout"}
         </button>
       </div>

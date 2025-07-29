@@ -112,15 +112,18 @@ export const AppContextProvider = ({ children }) => {
   //   get cart total
 
   const getCartAmount = () => {
-    let totalAmount = 0;
-    for (const items in cartItems) {
-      let itemInfo = products.find((product) => product._id === items);
-      if (cartItems[items] > 0) {
-        totalAmount += itemInfo.offerprice * cartItems[items];
-      }
+  let total = 0;
+  for (let id in cartItems) {
+    const product = products.find((p) => p._id === id);
+    if (product) {
+      total += product.offerprice * cartItems[id];
     }
-    return Math.floor(totalAmount * 100) / 100;
-  };
+  }
+  console.log("cartItems", cartItems);
+  return total;
+
+
+};
 
   useEffect(() => {
     fetchUser();
@@ -166,6 +169,7 @@ export const AppContextProvider = ({ children }) => {
     getCartCount,
     axios,
     fetchProducts,
+    SetCartItems
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

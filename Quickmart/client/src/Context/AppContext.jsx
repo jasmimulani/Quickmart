@@ -119,7 +119,7 @@ export const AppContextProvider = ({ children }) => {
       total += product.offerprice * cartItems[id];
     }
   }
-  console.log("cartItems", cartItems);
+  // console.log("cartItems", cartItems);
   return total;
 
 

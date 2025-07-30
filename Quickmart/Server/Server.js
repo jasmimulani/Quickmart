@@ -10,6 +10,7 @@ import productRoute from './routes/ProductRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import addressRouter from './routes/addressRoute.js';
 import orderRoute from './routes/orderRoute.js';
+import { Stripewebhooks } from './controllers/orderController.js';
 
 const app = express();
 const port = process.env.PORT || 7000;
@@ -26,6 +27,8 @@ app.use(cors({
   origin: 'http://localhost:5173', 
   credentials: true
 }));
+
+app.post('/stripe' , express.raw({type:'application/json'}), Stripewebhooks)
 
 
 

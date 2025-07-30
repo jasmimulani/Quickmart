@@ -55,6 +55,7 @@ const Cart = () => {
       if (!selectAddress) {
         return toast.error("please select addres");
       }
+
       //    with cod
       if (paymentOption === "COD") {
         const { data } = await axios.post("/api/order/cod", {
@@ -70,6 +71,23 @@ const Cart = () => {
           toast.success(data.message);
           SetCartItems({});
           navigate("/my-orders");
+        } else {
+          toast.error(data.message);
+        }
+      }else{
+        //  plce order with stripe
+
+        const { data } = await axios.post("/api/order/stripe", {
+          userId: user._id,
+          items: cartArray.map((item) => ({
+            product: item._id,
+            quantity: item.quantity,
+          })),
+          address: selectAddress._id,
+        });
+
+        if (data.success) {
+          window.location.replace(data.url)
         } else {
           toast.error(data.message);
         }

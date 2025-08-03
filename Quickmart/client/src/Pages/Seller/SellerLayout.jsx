@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const SellerLayout = () => {
-  const {axios , navigate } = useAppContext();
+  const { axios, navigate, setIsSeller } = useAppContext();
 
   const sidebarLinks = [
     { name: "Add Product", path: "/seller", icon: assets.add_icon },
@@ -19,19 +19,20 @@ const SellerLayout = () => {
   ];
 
   const logout = async () => {
-
-  try {
-    const {data} = await axios.get('/api/seller/logout')
-    if(data.success){
-      toast.success(data.message)
-      navigate('/')
-    }else{
-      toast.error(data.message)
+    try {
+      const { data } = await axios.get("/api/seller/logout");
+      if (data.success) {
+        toast.success(data.message);
+        setIsSeller(false);
+        navigate("/");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
-  } catch (error) {
-    toast.error(data.message)
-  }
   };
+
   return (
     <>
       <div className="flex items-center justify-between px-4 md:px-8 border-b border-gray-300 py-3 bg-white ">
@@ -53,22 +54,23 @@ const SellerLayout = () => {
       <div className="flex">
         <div className="md:w-64 w-16 border-r h-[95vh] text-base border-gray-300 pt-4 flex flex-col ">
           {sidebarLinks.map((item) => (
-            <NavLink to={item.path}
-              key={item.name} end={item.path === "/seller"}
-              className={ ({isActive}) =>`flex items-center py-3 px-4 gap-3 
+            <NavLink
+              to={item.path}
+              key={item.name}
+              end={item.path === "/seller"}
+              className={({ isActive }) => `flex items-center py-3 px-4 gap-3 
                             ${
-                              isActive ?
-                                 "border-r-4 md:border-r-[6px] bg-primary/10 border-primary text-primary"
+                              isActive
+                                ? "border-r-4 md:border-r-[6px] bg-primary/10 border-primary text-primary"
                                 : "hover:bg-gray-100/90 border-white text-gray-700"
                             }`}
             >
-
-                   <img src={item.icon} alt=""  className="w-7 h-7"/>
+              <img src={item.icon} alt="" className="w-7 h-7" />
               <p className="md:block hidden text-center">{item.name}</p>
             </NavLink>
           ))}
         </div>
-        <Outlet/>
+        <Outlet />
       </div>
     </>
   );

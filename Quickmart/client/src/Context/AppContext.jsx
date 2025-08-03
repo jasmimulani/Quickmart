@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { dummyProducts } from "../assets/assets";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -112,18 +111,16 @@ export const AppContextProvider = ({ children }) => {
   //   get cart total
 
   const getCartAmount = () => {
-  let total = 0;
-  for (let id in cartItems) {
-    const product = products.find((p) => p._id === id);
-    if (product) {
-      total += product.offerprice * cartItems[id];
+    let total = 0;
+    for (let id in cartItems) {
+      const product = products.find((p) => p._id === id);
+      if (product) {
+        total += product.offerprice * cartItems[id];
+      }
     }
-  }
-  // console.log("cartItems", cartItems);
-  return total;
-
-
-};
+    // console.log("cartItems", cartItems);
+    return total;
+  };
 
   useEffect(() => {
     fetchUser();
@@ -136,16 +133,16 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => {
     const updateCart = async () => {
       try {
-        const { data } = await axios.post('/api/cart/update', {cartItems});
+        const { data } = await axios.post("/api/cart/update", { cartItems });
         if (!data.success) {
           toast.error(data.message);
         }
       } catch (error) {
         toast.error(error.message);
       }
-    }
-    if(user){
-        updateCart()
+    };
+    if (user) {
+      updateCart();
     }
   }, [cartItems]);
 
@@ -169,7 +166,7 @@ export const AppContextProvider = ({ children }) => {
     getCartCount,
     axios,
     fetchProducts,
-    SetCartItems
+    SetCartItems,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -1,9 +1,9 @@
 import Product from "../models/product.js";
 import Order from "../models/Order.js";
 import Stripe from "stripe";
-import User from '../models/User.js'
+import User from "../models/User.js";
 
-// place order cod: /api/order/cod
+// COD order: /api/order/cod
 export const placeOrderCOD = async (req, res) => {
   try {
     const { userId, items, address } = req.body;
@@ -37,7 +37,7 @@ export const placeOrderCOD = async (req, res) => {
   }
 };
 
-// place order stripe: /api/order/stripe
+// Stripe order: /api/order/stripe
 export const placeOrderStripe = async (req, res) => {
   try {
     const { userId, items, address } = req.body;
@@ -70,22 +70,19 @@ export const placeOrderStripe = async (req, res) => {
       amount,
       address,
       paymentType: "Online",
+      isPaid: false, // Will be updated after payment confirmation
     });
 
     const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-    const line_items = productData.map((item) => {
-      return {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: item.name,
-          },
-          unit_amount: Math.round(item.price * 1.02 * 100), // price with 2% tax
-        },
-        quantity: item.quantity,
-      };
-    });
+    const line_items = productData.map((item) => ({
+      price_data: {
+        currency: "usd",
+        product_data: { name: item.name },
+        unit_amount: Math.round(item.price * 1.02 * 100), // 2% tax
+      },
+      quantity: item.quantity,
+    }));
 
     const session = await stripeInstance.checkout.sessions.create({
       line_items,
@@ -105,75 +102,66 @@ export const placeOrderStripe = async (req, res) => {
   }
 };
 
-//  stripe webhook to verify paymnet action: /stripe
-
-export const Stripewebhooks = async (request, response) => {
-  // stripe gateway initialize
+// In your controller: Stripewebhooks
+export const Stripewebhooks = async (req, res) => {
   const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-  const sig = request.headers["stripe-signature"];
+  const sig = req.headers["stripe-signature"];
   let event;
 
   try {
     event = stripeInstance.webhooks.constructEvent(
-      request.body,
+      req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (error) {
-    response.status(400).second(`webhook Error: ${error.message}`);
+    return res.status(400).send(`Webhook Error: ${error.message}`);
   }
 
-  //  handle the event
-
+  //  Put this inside the switch-case below:
   switch (event.type) {
-    case "payment_intent.succeeded": {
-      const paymentIntent = event.data.object;
-      const paymentIntentId = paymentIntent.Id;
+    case "checkout.session.completed": {
+      const session = event.data.object;
+      const { orderId, userId } = session.metadata;
 
-      //  geting Session matadata
+      console.log("Checkout completed: ", { orderId, userId });
 
-      const session = await stripeInstance.checkout.sessions.list({
-        payment_intent: paymentIntentId,
-      });
-      const { orderId, userId } = session.data[0].metadata;
-
-      //  mark payment as paid
       await Order.findByIdAndUpdate(orderId, { isPaid: true });
-      //   clear user cart
-      await User.findByIdAndUpdate(userId, { cartItems: {} });
+      await User.findByIdAndUpdate(userId, { cartItems: {} }); // clear cart
+
       break;
     }
-    case "payment_intent.payment_failed": {
-      const paymentIntent = event.data.object;
-      const paymentIntentId = paymentIntent.Id;
 
-      //  geting Session matadata
+    case "checkout.session.expired": {
+      const session = event.data.object;
+      const { orderId } = session.metadata;
 
-      const session = await stripeInstance.checkout.sessions.list({
-        payment_intent: paymentIntentId,
-      });
-      const { orderId } = session.data[0].metadata;
+      console.log("Checkout expired: ", orderId);
       await Order.findByIdAndDelete(orderId);
       break;
     }
 
     default:
-      console.error(`unhandled event type ${event.type}`);
+      console.error(`Unhandled event type: ${event.type}`);
       break;
   }
-  response.json({received: true });
+
+  res.json({ received: true });
 };
 
-// get orders by user id: /api/order/user
+
+
+
+// Get orders by user ID: /api/order/user
 export const getUserOrder = async (req, res) => {
   try {
     const { userId } = req.query;
 
-    const orders = await Order.find({
-      userId,
-      $or: [{ paymentType: "COD" }, { isPaid: true }],
-    })
+    if (!userId) {
+      return res.json({ success: false, message: "User ID is required" });
+    }
+
+    const orders = await Order.find({ userId })
       .populate("items.product address")
       .sort({ createdAt: -1 });
 
@@ -183,7 +171,8 @@ export const getUserOrder = async (req, res) => {
   }
 };
 
-// get all orders (admin/seller): /api/order/seller
+
+// Get all orders (admin/seller): /api/order/seller
 export const getAllOrder = async (req, res) => {
   try {
     const orders = await Order.find({

@@ -8,14 +8,14 @@ import toast from "react-hot-toast";
 const SellerLayout = () => {
   const { axios, navigate, setIsSeller } = useAppContext();
 
-  const sidebarLinks = [
-    { name: "Add Product", path: "/seller", icon: assets.add_icon },
-    {
+    const sidebarLinks = [
+    { name: "Add Product", path: "/seller/dashboard", icon: assets.add_icon },
+    {      
       name: "Product List",
-      path: "/seller/product-list",
+      path: "/seller/dashboard/product-list",
       icon: assets.product_list_icon,
     },
-    { name: "Orders", path: "/seller/orders", icon: assets.order_icon },
+    { name: "Orders", path: "/seller/dashboard/orders", icon: assets.order_icon },
   ];
 
   const logout = async () => {
@@ -57,7 +57,7 @@ const SellerLayout = () => {
             <NavLink
               to={item.path}
               key={item.name}
-              end={item.path === "/seller"}
+              end={item.path === "/seller/dashboard"}
               className={({ isActive }) => `flex items-center py-3 px-4 gap-3 
                             ${
                               isActive

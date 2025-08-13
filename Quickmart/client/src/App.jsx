@@ -45,12 +45,13 @@ const App = () => {
           <Route path='/contact' element={<ContactUs/>} />
 
           {/* Seller Routes */}
-          <Route path="/seller" element={  isSeller ? <SellerLayout /> : <Navigate to="/seller/login" />}>
+          <Route path="/seller" element={<Navigate to="/seller/login" />} />
+          <Route path="/seller/login" element={<SellerLogin />} />
+          <Route path="/seller/dashboard" element={isSeller ? <SellerLayout /> : <Navigate to="/seller/login" />}>
             <Route index element={<AddProduct />} />
             <Route path="product-list" element={<ProductList />} />
             <Route path="orders" element={<Orders />} />
           </Route>
-          <Route path="/seller/login" element={<SellerLogin />} />
         </Routes>
       </div>
 

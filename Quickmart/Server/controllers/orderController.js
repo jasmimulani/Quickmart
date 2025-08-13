@@ -126,8 +126,13 @@ export const Stripewebhooks = async (req, res) => {
 
       console.log("Checkout completed: ", { orderId, userId });
 
-      await Order.findByIdAndUpdate(orderId, { isPaid: true });
-      await User.findByIdAndUpdate(userId, { cartItems: {} }); // clear cart
+      try {
+        await Order.findByIdAndUpdate(orderId, { isPaid: true });
+        await User.findByIdAndUpdate(userId, { cartItems: {} }); // clear cart
+        console.log("Order updated successfully:", orderId);
+      } catch (error) {
+        console.error("Error updating order:", error);
+      }
 
       break;
     }
@@ -175,9 +180,7 @@ export const getUserOrder = async (req, res) => {
 // Get all orders (admin/seller): /api/order/seller
 export const getAllOrder = async (req, res) => {
   try {
-    const orders = await Order.find({
-      $or: [{ paymentType: "COD" }, { isPaid: true }],
-    })
+    const orders = await Order.find({})
       .populate("items.product address")
       .sort({ createdAt: -1 });
 

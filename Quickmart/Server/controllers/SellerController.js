@@ -17,7 +17,7 @@ export const sellerLogin = async (req , res) =>{
 
       return res.json({success:true, message:'logged in'});
     }else{
-        return res.json({succsess: false , message:'invalid Credintials'})
+        return res.json({success: false , message:'invalid Credintials'})
     }
    } catch (error) {
     
@@ -31,6 +31,8 @@ export const sellerLogin = async (req , res) =>{
 //  seller is auth
 export const isSellerAuth = async (req,res) =>{
     try {
+      console.log('Checking seller auth...');
+      console.log('Seller ID from middleware:', req.sellerId);
 
     //   const { userId } = req.body;
     //   const user = await User.findById(userId).select("-password")

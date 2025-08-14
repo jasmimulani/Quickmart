@@ -1,7 +1,6 @@
 import React ,{ useEffect,useState } from 'react'
 import { useAppContext } from '../../Context/AppContext';
 import { assets } from '../../assets/assets';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const Orders = () => {
@@ -12,13 +11,22 @@ const Orders = () => {
    const fetchOrders = async () =>{
     setLoading(true)
     try {
+        console.log('Fetching orders...');
         const {data} = await axios.get('/api/order/seller')
+        console.log('Orders response:', data);
+        console.log('Orders data type:', typeof data);
+        console.log('Orders data keys:', Object.keys(data));
+        
         if(data.success){
-            setOrders(data.orders)
+            console.log('Orders array:', data.orders);
+            console.log('Orders array length:', data.orders?.length);
+            setOrders(data.orders || [])
         }else{
+            console.log('API returned error:', data.message);
             toast.error(data.message)
         }
     } catch (error) {
+        console.error('Error fetching orders:', error);
         toast.error(error.message)
     } finally {
         setLoading(false)
@@ -50,23 +58,24 @@ useEffect(() =>{
                     </button>
                 </div>
             </div>
-            {orders.length === 0 ? (
+            {!orders || orders.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                     <p>No orders found</p>
                 </div>
             ) : (
             orders.map((order, index) => (
+                order && (
                 <div key={index} className="flex flex-col  md:items-center  md:flex-row
                 gap-5 justify-between  p-5 max-w-4xl rounded-md border border-gray-300">
 
                     <div className="flex gap-5 max-w-80">
                         <img className="w-12 h-12 object-cover " src={assets.box_icon} alt="boxIcon" />
                         <div>
-                            {order.items.map((item, index) => (
+                            {order.items && order.items.map((item, index) => (
                                 <div key={index} className="flex flex-col">
                                     <p className="font-medium">
-                                        {item.product.name}{" "}
-                                        <span className="text-primary">x {item.quantity}</span>
+                                        {item.product?.name || 'Product Name Not Available'}{" "}
+                                        <span className="text-primary">x {item.quantity || 0}</span>
                                     </p>
                                 </div>
                             ))}
@@ -74,12 +83,12 @@ useEffect(() =>{
                     </div>
 
                     <div className="text-sm md:text-base text-black/60">
-                        <p className='text-black/80'>{order.address.firstName} {order.address.lastName}</p>
+                        <p className='text-black/80'>{order.address?.firstName || 'N/A'} {order.address?.lastName || 'N/A'}</p>
 
-                        <p>{order.address.street}, {order.address.city}</p>
-                        <p> {order.address.state},{order.address.zipcode}, {order.address.country}</p>
+                        <p>{order.address?.street || 'N/A'}, {order.address?.city || 'N/A'}</p>
+                        <p> {order.address?.state || 'N/A'},{order.address?.zipcode || 'N/A'}, {order.address?.country || 'N/A'}</p>
                         <p></p>
-                        <p>{order.address.phone}</p>
+                        <p>{order.address?.phone || 'N/A'}</p>
                     </div>
 
                     <p className="font-medium text-base my-auto ">{currency}{order.amount}</p>
@@ -92,10 +101,11 @@ useEffect(() =>{
                         </p>
                     </div>
                 </div>
+                )
             ))
             )}
         </div>
-        </div>
+    </div>
     );
 }
 

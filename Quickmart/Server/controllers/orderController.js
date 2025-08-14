@@ -180,12 +180,17 @@ export const getUserOrder = async (req, res) => {
 // Get all orders (admin/seller): /api/order/seller
 export const getAllOrder = async (req, res) => {
   try {
+    console.log('Seller requesting orders...');
     const orders = await Order.find({})
       .populate("items.product address")
       .sort({ createdAt: -1 });
 
+    console.log('Found orders:', orders.length);
+    console.log('Orders data:', orders);
+
     res.json({ success: true, orders });
   } catch (error) {
+    console.error('Error in getAllOrder:', error);
     res.json({ success: false, message: error.message });
   }
 };

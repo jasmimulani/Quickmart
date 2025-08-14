@@ -9,7 +9,7 @@ const AddProduct = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [offerPrice, setOffrtPrice] = useState("");
+  const [offerPrice, setOfferPrice] = useState("");
 
   const { axios } = useAppContext();
 
@@ -47,7 +47,7 @@ const { data } = await axios.post("/api/product/add", formData);
         setDescription("");
         setCategory("");
         setPrice("");
-        setOffrtPrice("");
+        setOfferPrice("");
         setFiles([]);
       } else {
         toast.error(data.message);
@@ -165,7 +165,7 @@ const { data } = await axios.post("/api/product/add", formData);
               Offer Price
             </label>
             <input
-              onChange={(e) => setOffrtPrice(e.target.value)}
+              onChange={(e) => setOfferPrice(e.target.value)}
               value={offerPrice}
               id="offer-price"
               type="number"

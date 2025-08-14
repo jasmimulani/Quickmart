@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import axios from "axios";
+import { useAppContext } from "../Context/AppContext";
+import toast from "react-hot-toast";
 
 const ContactUs = () => {
+  const { axios } = useAppContext();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,13 +23,26 @@ const ContactUs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, message } = formData;
+    
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    
+    setLoading(true);
     try {
-      await axios.post("/contact", { name, email, message }); // updated endpoint
-      alert("Thanks for contacting QuickMart!");
-      setFormData({ name: "", email: "", message: "" });
+      const { data } = await axios.post("/api/contact/contact", { name, email, message });
+      if (data.success) {
+        toast.success("Thanks for contacting QuickMart!");
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        toast.error(data.message || "Something went wrong. Try again later.");
+      }
     } catch (err) {
-      alert("Something went wrong. Try again later.");
       console.error(err);
+      toast.error(err.response?.data?.message || "Something went wrong. Try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,16 +104,17 @@ const ContactUs = () => {
             </div>
             <button
               type="submit"
+              disabled={loading}
               style={{
-                backgroundColor: "#27ae60",
+                backgroundColor: loading ? "#95a5a6" : "#27ae60",
                 color: "#fff",
                 padding: "10px 20px",
                 border: "none",
                 borderRadius: "6px",
-                cursor: "pointer",
+                cursor: loading ? "not-allowed" : "pointer",
               }}
             >
-              Send Message
+              {loading ? "Sending..." : "Send Message"}
             </button>
           </form>
 

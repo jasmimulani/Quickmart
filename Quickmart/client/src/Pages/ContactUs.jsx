@@ -44,7 +44,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", background: "#f9fbfc" }}>
+    <main style={{ fontFamily: "Arial, sans-serif", background: "#f9fbfc" }} aria-label="Contact QuickMart">
       {/* Hero Section */}
       <section
         style={{
@@ -53,6 +53,7 @@ const ContactUs = () => {
           textAlign: "center",
           padding: "100px 20px",
         }}
+        aria-label="Contact Hero"
       >
         <h1 style={{ fontSize: "48px", marginBottom: "10px" }}>Contact QuickMart</h1>
         <p style={{ fontSize: "18px", maxWidth: "700px", margin: "0 auto" }}>
@@ -61,9 +62,8 @@ const ContactUs = () => {
       </section>
 
       {/* Main Content */}
-      <div style={{ maxWidth: "1100px", margin: "60px auto", padding: "0 20px" }}>
+      <section style={{ maxWidth: "1100px", margin: "60px auto", padding: "0 20px" }} aria-label="Contact Form and Info">
         <div style={{ display: "flex", flexWrap: "wrap", gap: "40px", justifyContent: "space-between" }}>
-          
           {/* Contact Form */}
           <form
             onSubmit={handleSubmit}
@@ -74,6 +74,7 @@ const ContactUs = () => {
               borderRadius: "12px",
               boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
             }}
+            aria-label="Send us a message"
           >
             <h2 style={{ color: "#2E7D32", marginBottom: "20px" }}>📩 Send us a Message</h2>
 
@@ -104,6 +105,7 @@ const ContactUs = () => {
                 onChange={handleChange}
                 style={{ ...inputStyle, height: "120px", resize: "vertical" }}
                 placeholder="Type your message here..."
+                aria-label="Message"
               />
             </div>
             <button
@@ -121,6 +123,7 @@ const ContactUs = () => {
                 cursor: loading ? "not-allowed" : "pointer",
                 transition: "0.3s",
               }}
+              aria-live="polite"
               onMouseOver={(e) => !loading && (e.target.style.backgroundColor = "#1e8449")}
               onMouseOut={(e) => !loading && (e.target.style.backgroundColor = "#27ae60")}
             >
@@ -133,22 +136,22 @@ const ContactUs = () => {
             <ContactCard
               icon={<FaPhoneAlt size={22} color="#27ae60" />}
               title="Phone"
-              value="+91 98765 43210"
+              value={<a href="tel:+919876543210" style={{ color: "#636e72", textDecoration: "none" }}>+91 98765 43210</a>}
             />
             <ContactCard
               icon={<FaEnvelope size={22} color="#2980b9" />}
               title="Email"
-              value="support@quickmart.com"
+              value={<a href="mailto:support@quickmart.com" style={{ color: "#636e72", textDecoration: "none" }}>support@quickmart.com</a>}
             />
             <ContactCard
               icon={<FaMapMarkerAlt size={22} color="#e67e22" />}
               title="Address"
-              value="123 QuickMart Street, Mumbai, India"
+              value={<span style={{ color: "#636e72" }}>123 QuickMart Street, Mumbai, India</span>}
             />
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

@@ -4,25 +4,41 @@ import { Link } from 'react-router-dom'
 
 const MainBanner = () => {
   return (
-    <div className='relative'>
-       <img src={assets.main_banner_bg} alt="banner" className='w-full hidden md:block' />
-       <img src={assets.main_banner_bg_sm} alt="banner" className='w-full  md:hidden' />
+    <section className="relative rounded-2xl overflow-hidden shadow-lg mt-4" aria-label="Main promotional banner">
+      {/* Banner Images */}
+      <img src={assets.main_banner_bg} alt="Main banner background" className="w-full hidden md:block object-cover" loading="lazy" />
+      <img src={assets.main_banner_bg_sm} alt="Main banner background mobile" className="w-full md:hidden object-cover" loading="lazy" />
 
-       <div className='  md:mt-20 absolute inset-0 flex flex-col items-center md:items-start justify-end md:justify-center pb-24 md:pd-0 px-4 md:pl-18 lg:pl-24'>
-        <h1 className='text-3xl md:text-4xl lg:text-5xl font-bold text-center md:text-left max-w-72 md:max-w-80 lg:max-w-105 leading-tight lg:leading-15'> Freshness You Can Trust , Saving You Will Love!</h1>
-      
+      {/* Gradient Overlay for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-transparent to-transparent pointer-events-none" aria-hidden="true"></div>
 
-       <div className='flex items-center mt-6 font-medium'>
-        <Link to={"/products"} className='group flex items-center gap-2 px-7 md:px-9 py-3 bg-primary hover:bg-primary-dull transition rounded text-white cursor-pointer'>Shop now
-        <img className='md:hidden transition group-focus:translate-x-1' src={assets.white_arrow_icon} alt=" arrow" />
-        </Link>
+      {/* Banner Content */}
+      <div className="absolute inset-0 flex flex-col items-center md:items-start justify-end md:justify-center pb-24 md:pb-0 px-4 md:pl-18 lg:pl-24">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white md:text-left text-center max-w-2xl leading-tight drop-shadow-lg">
+          Freshness You Can Trust, Savings You Will Love!
+        </h1>
 
-          <Link to={"/products"} className='group  hidden md:flex items-center gap-2 px-9 py-3 cursor-pointer'>Explore deals
-        <img className=' transition group-hover:translate-x-1' src={assets.black_arrow_icon} alt=" arrow" />
-        </Link>
-       </div>
-        </div>
-    </div>
+        <nav aria-label="Banner actions" className="flex items-center mt-8 gap-4">
+          <Link
+            to="/products"
+            className="group flex items-center gap-2 px-8 py-3 bg-primary hover:bg-primary-dull transition rounded-lg text-white font-semibold shadow-md text-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            aria-label="Shop now"
+          >
+            Shop now
+            <img className="md:hidden transition group-focus:translate-x-1 w-5" src={assets.white_arrow_icon} alt="Arrow icon" loading="lazy" />
+          </Link>
+
+          <Link
+            to="/products"
+            className="group hidden md:flex items-center gap-2 px-8 py-3 bg-white hover:bg-gray-100 transition rounded-lg text-primary font-semibold shadow-md text-lg border border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            aria-label="Explore deals"
+          >
+            Explore deals
+            <img className="transition group-hover:translate-x-1 w-5" src={assets.black_arrow_icon} alt="Arrow icon" loading="lazy" />
+          </Link>
+        </nav>
+      </div>
+    </section>
   )
 }
 

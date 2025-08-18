@@ -4,15 +4,20 @@ export const updateCart = async (req, res) => {
   try {
     const { userId, cartItems } = req.body;
 
-    if (!userId || !cartItems) {
-      return res.json({ success: false, message: "Missing userId or cartItems" });
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID is required" });
     }
 
-    await User.findByIdAndUpdate(userId, { cartItems });
+    // Update cart in DB
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { cartItems },
+      { new: true }
+    );
 
-    res.json({ success: true, message: "Cart Updated" });
+    res.json({ success: true, cartItems: user.cartItems });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
+

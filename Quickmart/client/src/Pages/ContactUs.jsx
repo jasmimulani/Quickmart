@@ -14,21 +14,18 @@ const ContactUs = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, message } = formData;
-    
+
     if (!name.trim() || !email.trim() || !message.trim()) {
       toast.error("Please fill in all fields");
       return;
     }
-    
+
     setLoading(true);
     try {
       const { data } = await axios.post("/api/contact/contact", { name, email, message });
@@ -47,58 +44,65 @@ const ContactUs = () => {
   };
 
   return (
-    <div style={{ padding: "60px 20px", backgroundColor: "#f9fbfc" }}>
-      <div style={{ maxWidth: "1000px", margin: "auto" }}>
-        <h1 style={{ textAlign: "center", fontSize: "2.5rem", color: "#2c3e50", marginBottom: "30px" }}>
-          Contact Us
-        </h1>
-        <p style={{ textAlign: "center", color: "#636e72", fontSize: "1.1rem", marginBottom: "50px" }}>
-          Have a question, feedback, or just want to say hello? We'd love to hear from you.
+    <div style={{ fontFamily: "Arial, sans-serif", background: "#f9fbfc" }}>
+      {/* Hero Section */}
+      <section
+        style={{
+          background: "url('https://img.freepik.com/free-photo/contact-us-customer-support-hotline-people-connect-call-customer-support_36325-164.jpg') center/cover no-repeat",
+          color: "#fff",
+          textAlign: "center",
+          padding: "100px 20px",
+        }}
+      >
+        <h1 style={{ fontSize: "48px", marginBottom: "10px" }}>Contact QuickMart</h1>
+        <p style={{ fontSize: "18px", maxWidth: "700px", margin: "0 auto" }}>
+          Have a question, feedback, or need help? We’re here to assist you.
         </p>
+      </section>
 
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "40px" }}>
+      {/* Main Content */}
+      <div style={{ maxWidth: "1100px", margin: "60px auto", padding: "0 20px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "40px", justifyContent: "space-between" }}>
+          
+          {/* Contact Form */}
           <form
             onSubmit={handleSubmit}
             style={{
-              flex: "1 1 400px",
+              flex: "1 1 500px",
               backgroundColor: "#fff",
-              padding: "30px",
-              borderRadius: "10px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+              padding: "40px",
+              borderRadius: "12px",
+              boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
             }}
           >
+            <h2 style={{ color: "#2E7D32", marginBottom: "20px" }}>📩 Send us a Message</h2>
+
+            <FormField
+              label="Name"
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Your full name"
+              required
+            />
+            <FormField
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="your@email.com"
+              required
+            />
             <div style={{ marginBottom: "20px" }}>
-              <label>Name</label>
-              <input
-                type="text"
-                name="name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                style={inputStyle}
-                placeholder="Your full name"
-              />
-            </div>
-            <div style={{ marginBottom: "20px" }}>
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                style={inputStyle}
-                placeholder="your@email.com"
-              />
-            </div>
-            <div style={{ marginBottom: "20px" }}>
-              <label>Message</label>
+              <label style={labelStyle}>Message</label>
               <textarea
                 name="message"
                 required
                 value={formData.message}
                 onChange={handleChange}
-                style={{ ...inputStyle, height: "100px", resize: "vertical" }}
+                style={{ ...inputStyle, height: "120px", resize: "vertical" }}
                 placeholder="Type your message here..."
               />
             </div>
@@ -106,39 +110,38 @@ const ContactUs = () => {
               type="submit"
               disabled={loading}
               style={{
+                width: "100%",
                 backgroundColor: loading ? "#95a5a6" : "#27ae60",
                 color: "#fff",
-                padding: "10px 20px",
+                padding: "14px",
                 border: "none",
-                borderRadius: "6px",
+                borderRadius: "8px",
+                fontSize: "16px",
+                fontWeight: "bold",
                 cursor: loading ? "not-allowed" : "pointer",
+                transition: "0.3s",
               }}
+              onMouseOver={(e) => !loading && (e.target.style.backgroundColor = "#1e8449")}
+              onMouseOut={(e) => !loading && (e.target.style.backgroundColor = "#27ae60")}
             >
               {loading ? "Sending..." : "Send Message"}
             </button>
           </form>
 
-          <div
-            style={{
-              flex: "1 1 300px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              gap: "30px",
-            }}
-          >
-            <ContactInfo
-              icon={<FaPhoneAlt size={20} color="#27ae60" />}
+          {/* Contact Info */}
+          <div style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: "25px" }}>
+            <ContactCard
+              icon={<FaPhoneAlt size={22} color="#27ae60" />}
               title="Phone"
               value="+91 98765 43210"
             />
-            <ContactInfo
-              icon={<FaEnvelope size={20} color="#2980b9" />}
+            <ContactCard
+              icon={<FaEnvelope size={22} color="#2980b9" />}
               title="Email"
               value="support@quickmart.com"
             />
-            <ContactInfo
-              icon={<FaMapMarkerAlt size={20} color="#e67e22" />}
+            <ContactCard
+              icon={<FaMapMarkerAlt size={22} color="#e67e22" />}
               title="Address"
               value="123 QuickMart Street, Mumbai, India"
             />
@@ -149,17 +152,54 @@ const ContactUs = () => {
   );
 };
 
+/* Reusable Input Field */
+const FormField = ({ label, type, name, value, onChange, placeholder, required }) => (
+  <div style={{ marginBottom: "20px" }}>
+    <label style={labelStyle}>{label}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      required={required}
+      style={inputStyle}
+    />
+  </div>
+);
+
+const labelStyle = { display: "block", marginBottom: "6px", fontWeight: "600", color: "#2c3e50" };
+
 const inputStyle = {
   width: "100%",
-  padding: "10px",
-  marginTop: "6px",
+  padding: "12px",
   border: "1px solid #ccc",
-  borderRadius: "6px",
+  borderRadius: "8px",
   fontSize: "1rem",
+  transition: "0.3s",
 };
 
-const ContactInfo = ({ icon, title, value }) => (
-  <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+const ContactCard = ({ icon, title, value }) => (
+  <div
+    style={{
+      background: "#fff",
+      padding: "20px",
+      borderRadius: "10px",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+      display: "flex",
+      alignItems: "center",
+      gap: "15px",
+      transition: "transform 0.3s, box-shadow 0.3s",
+    }}
+    onMouseOver={(e) => {
+      e.currentTarget.style.transform = "translateY(-6px)";
+      e.currentTarget.style.boxShadow = "0 6px 18px rgba(0,0,0,0.15)";
+    }}
+    onMouseOut={(e) => {
+      e.currentTarget.style.transform = "translateY(0)";
+      e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+    }}
+  >
     {icon}
     <div>
       <strong style={{ display: "block", color: "#2c3e50", fontSize: "1.1rem" }}>{title}</strong>

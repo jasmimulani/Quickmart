@@ -1,47 +1,141 @@
 import React from "react";
-import { FaTruck, FaLeaf, FaClock, FaCheckCircle } from "react-icons/fa";
 
 const About = () => {
   return (
-    <div className="about-page" style={{ padding: "40px 20px", backgroundColor: "#f9f9f9" }}>
-      <div style={{ maxWidth: "1000px", margin: "auto" }}>
-        <h1 style={{ textAlign: "center", fontSize: "2.5rem", color: "#2c3e50", marginBottom: "30px" }}>
-          About QuickMart
+    <div style={{ fontFamily: "Arial, sans-serif", color: "#333" }}>
+      
+      {/* Hero Section */}
+      <section
+        style={{
+          background: "url('https://img.freepik.com/free-photo/healthy-food-background-studio-photo-different-fruits-vegetables-black-table_155003-32946.jpg') center/cover no-repeat",
+          color: "#fff",
+          padding: "100px 20px",
+          textAlign: "center",
+        }}
+      >
+        <h1 style={{ fontSize: "50px", fontWeight: "bold", marginBottom: "15px" }}>
+          Welcome to QuickMart 🛒
         </h1>
-
-        <p style={{ fontSize: "1.1rem", lineHeight: "1.7", color: "#555" }}>
-          At <strong>QuickMart</strong>, we believe grocery shopping should be fast, fresh, and hassle-free. Our mission is
-          to bring the freshest fruits, vegetables, and daily essentials straight to your doorstep with just a few clicks.
+        <p style={{ fontSize: "20px", maxWidth: "700px", margin: "0 auto" }}>
+          Your trusted online grocery store – delivering freshness, quality, and convenience at your doorstep.
         </p>
+      </section>
 
-        <p style={{ fontSize: "1.1rem", lineHeight: "1.7", marginTop: "15px", color: "#555" }}>
-          With a growing range of quality products, secure payments via <strong>Stripe</strong>, and real-time order tracking,
-          we’re committed to making your grocery experience simpler and smarter.
+      {/* Our Mission Section */}
+      <section style={{ maxWidth: "1200px", margin: "60px auto", padding: "0 20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "center" }}>
+          
+          {/* Text */}
+          <div>
+            <h2 style={{ fontSize: "32px", color: "#2E7D32", marginBottom: "15px" }}>🌱 Our Mission</h2>
+            <p style={{ fontSize: "18px", lineHeight: "1.7" }}>
+              At <strong>QuickMart</strong>, we aim to simplify grocery shopping by offering a wide
+              range of fresh, affordable, and high-quality products. We partner with local farmers
+              and trusted suppliers to bring you only the best.
+            </p>
+          </div>
+
+          {/* Image */}
+          <div>
+            <img
+              src="https://img.freepik.com/free-photo/basket-full-vegetables_1112-316.jpg"
+              alt="Mission QuickMart"
+              style={{ width: "100%", borderRadius: "12px", boxShadow: "0 6px 20px rgba(0,0,0,0.15)" }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us - Cards */}
+      <section style={{ background: "#f5f5f5", padding: "60px 20px" }}>
+        <h2 style={{ textAlign: "center", fontSize: "32px", color: "#388E3C", marginBottom: "40px" }}>
+          🚀 Why Choose QuickMart?
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "25px", maxWidth: "1100px", margin: "0 auto" }}>
+          {[
+            { title: "Fresh & Organic", desc: "Handpicked fruits and vegetables directly from farms." },
+            { title: "Wide Variety", desc: "From groceries to household essentials, all in one place." },
+            { title: "Affordable Prices", desc: "Best deals and discounts for your daily needs." },
+            { title: "Fast Delivery", desc: "Get your groceries delivered to your doorstep quickly." },
+          ].map((card, i) => (
+            <div
+              key={i}
+              style={{
+                background: "#fff",
+                padding: "25px",
+                borderRadius: "12px",
+                textAlign: "center",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                transition: "transform 0.3s, box-shadow 0.3s",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = "translateY(-8px)";
+                e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.2)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+              }}
+            >
+              <h3 style={{ color: "#2E7D32", marginBottom: "10px" }}>{card.title}</h3>
+              <p style={{ fontSize: "16px", color: "#555" }}>{card.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Our Story Section */}
+      <section style={{ maxWidth: "1200px", margin: "60px auto", padding: "0 20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "center" }}>
+          
+          {/* Image */}
+          <div>
+            <img
+              src="https://img.freepik.com/free-photo/grocery-shopping-basket-cart-filled-with-fresh-vegetables-isolated-white-background-generative-ai_1258-150754.jpg"
+              alt="Our Story"
+              style={{ width: "100%", borderRadius: "12px", boxShadow: "0 6px 20px rgba(0,0,0,0.15)" }}
+            />
+          </div>
+
+          {/* Text */}
+          <div>
+            <h2 style={{ fontSize: "32px", color: "#2E7D32", marginBottom: "15px" }}>📍 Our Story</h2>
+            <p style={{ fontSize: "18px", lineHeight: "1.7" }}>
+              QuickMart started as a small neighborhood shop with a big dream – 
+              to make grocery shopping simple and enjoyable. Today, we proudly 
+              serve thousands of happy families, delivering not just groceries, 
+              but trust, convenience, and care.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section style={{ background: "#2E7D32", color: "#fff", textAlign: "center", padding: "60px 20px" }}>
+        <h2 style={{ fontSize: "32px", marginBottom: "20px" }}>Ready to Shop with QuickMart?</h2>
+        <p style={{ fontSize: "18px", marginBottom: "30px" }}>
+          Get your groceries delivered fast, fresh, and affordably.
         </p>
-
-        <div style={{ display: "flex", flexWrap: "wrap", marginTop: "40px", gap: "30px", justifyContent: "center" }}>
-          <Feature icon={<FaLeaf size={30} color="#27ae60" />} title="Fresh Products" desc="We source daily from trusted farms and suppliers to ensure top quality." />
-          <Feature icon={<FaTruck size={30} color="#2980b9" />} title="Fast Delivery" desc="Same-day and next-day delivery options to fit your schedule." />
-          <Feature icon={<FaClock size={30} color="#e67e22" />} title="24/7 Shopping" desc="Order anytime from anywhere with our easy-to-use platform." />
-          <Feature icon={<FaCheckCircle size={30} color="#16a085" />} title="Secure Checkout" desc="Pay safely with Stripe or Cash on Delivery options." />
-        </div>
-
-        <div style={{ marginTop: "50px", textAlign: "center", fontSize: "1.2rem", color: "#444" }}>
-          <p>
-            Thank you for choosing <strong>QuickMart</strong> – Your everyday essentials, delivered with care.
-          </p>
-        </div>
-      </div>
+        <a
+          href="/products"
+          style={{
+            background: "#fff",
+            color: "#2E7D32",
+            padding: "14px 30px",
+            borderRadius: "8px",
+            fontSize: "18px",
+            fontWeight: "bold",
+            textDecoration: "none",
+            transition: "0.3s",
+          }}
+          onMouseOver={(e) => (e.target.style.background = "#f1f1f1")}
+          onMouseOut={(e) => (e.target.style.background = "#fff")}
+        >
+          🛍️ Start Shopping
+        </a>
+      </section>
     </div>
   );
 };
-
-const Feature = ({ icon, title, desc }) => (
-  <div style={{ flex: "1 1 200px", backgroundColor: "#fff", padding: "20px", borderRadius: "8px", boxShadow: "0 2px 6px rgba(0,0,0,0.1)" }}>
-    <div style={{ marginBottom: "10px" }}>{icon}</div>
-    <h3 style={{ marginBottom: "8px", fontSize: "1.2rem", color: "#2c3e50" }}>{title}</h3>
-    <p style={{ fontSize: "0.95rem", color: "#666" }}>{desc}</p>
-  </div>
-);
 
 export default About;

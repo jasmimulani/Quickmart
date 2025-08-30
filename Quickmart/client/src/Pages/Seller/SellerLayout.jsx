@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const SellerLayout = () => {
-  const { axios, navigate, setIsSeller } = useAppContext();
+  const { axios, navigate, setIsSeller, sellerProfile, setSellerProfile } = useAppContext();
 
     const sidebarLinks = [
     { name: "Add Product", path: "/seller/dashboard", icon: assets.add_icon },
@@ -24,6 +24,7 @@ const SellerLayout = () => {
       if (data.success) {
         toast.success(data.message);
         setIsSeller(false);
+        setSellerProfile(null);
         navigate("/");
       } else {
         toast.error(data.message);
@@ -42,7 +43,7 @@ const SellerLayout = () => {
           </h2>
         </Link>
         <div className="flex items-center gap-5 text-gray-500">
-          <p>Hi! Admin</p>
+          <p>Hi! {sellerProfile?.name || 'Admin'}</p>
           <button
             onClick={logout}
             className="border rounded-full text-sm px-4 py-1"

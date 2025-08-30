@@ -8,7 +8,8 @@ const authSeller = (req, res, next) => {
     }
 
     const decoded = jwt.verify(sellerToken, process.env.JWT_SECRET);
-    req.sellerId = decoded.id;
+    // Attach entire admin payload for downstream use
+    req.admin = decoded;
     next();
   } catch (error) {
     res.json({ success: false, message: "Invalid token" });

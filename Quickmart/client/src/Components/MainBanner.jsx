@@ -4,39 +4,85 @@ import { Link } from 'react-router-dom'
 
 const MainBanner = () => {
   return (
-    <section className="relative rounded-2xl overflow-hidden shadow-lg mt-4" aria-label="Main promotional banner">
-      {/* Banner Images */}
-      <img src={assets.main_banner_bg} alt="Main banner background" className="w-full hidden md:block object-cover" loading="lazy" />
-      <img src={assets.main_banner_bg_sm} alt="Main banner background mobile" className="w-full md:hidden object-cover" loading="lazy" />
+    <section className="relative rounded-3xl overflow-hidden shadow-strong mt-6" aria-label="Main promotional banner">
+      {/* Background with gradient overlay */}
+      <div className="relative h-[500px] md:h-[600px] gradient-bg">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/30 to-indigo-900/20"></div>
+        
+        {/* Floating elements for visual interest */}
+        <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+        <div className="absolute bottom-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-white/5 rounded-full blur-lg"></div>
+      </div>
 
-      {/* Gradient Overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-transparent to-transparent pointer-events-none" aria-hidden="true"></div>
+      {/* Content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-12 lg:px-16 text-center">
+        <div className="max-w-4xl mx-auto">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium mb-6 border border-white/30">
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            Fresh groceries delivered in 30 minutes
+          </div>
 
-      {/* Banner Content */}
-      <div className="absolute inset-0 flex flex-col items-center md:items-start justify-end md:justify-center pb-24 md:pb-0 px-4 md:pl-18 lg:pl-24">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white md:text-left text-center max-w-2xl leading-tight drop-shadow-lg">
-          Freshness You Can Trust, Savings You Will Love!
-        </h1>
+          {/* Main heading */}
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <span className="block">Freshness You</span>
+            <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">Can Trust</span>
+          </h1>
 
-        <nav aria-label="Banner actions" className="flex items-center mt-8 gap-4">
-          <Link
-            to="/products"
-            className="group flex items-center gap-2 px-8 py-3 bg-primary hover:bg-primary-dull transition rounded-lg text-white font-semibold shadow-md text-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Shop now"
-          >
-            Shop now
-            <img className="md:hidden transition group-focus:translate-x-1 w-5" src={assets.white_arrow_icon} alt="Arrow icon" loading="lazy" />
-          </Link>
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Discover premium quality groceries at unbeatable prices. 
+            Fast delivery, fresh products, and exceptional service.
+          </p>
 
-          <Link
-            to="/products"
-            className="group hidden md:flex items-center gap-2 px-8 py-3 bg-white hover:bg-gray-100 transition rounded-lg text-primary font-semibold shadow-md text-lg border border-primary focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Explore deals"
-          >
-            Explore deals
-            <img className="transition group-hover:translate-x-1 w-5" src={assets.black_arrow_icon} alt="Arrow icon" loading="lazy" />
-          </Link>
-        </nav>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              to="/products"
+              className="group flex items-center gap-3 px-8 py-4 bg-white hover:bg-gray-50 transition-all duration-300 rounded-xl text-gray-900 font-semibold shadow-medium hover-lift text-lg min-w-[200px] justify-center"
+              aria-label="Shop now"
+            >
+              <span>Shop Now</span>
+              <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
+
+            <Link
+              to="/products"
+              className="group flex items-center gap-3 px-8 py-4 bg-transparent hover:bg-white/10 transition-all duration-300 rounded-xl text-white font-semibold border-2 border-white/30 hover:border-white/50 text-lg min-w-[200px] justify-center backdrop-blur-sm"
+              aria-label="Explore deals"
+            >
+              <span>Explore Deals</span>
+              <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+
+          {/* Trust indicators */}
+          <div className="flex items-center justify-center gap-8 mt-12 text-white/80">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm font-medium">Quality Guaranteed</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm font-medium">Fast Delivery</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm font-medium">Best Prices</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )

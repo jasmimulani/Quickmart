@@ -18,9 +18,7 @@ const Navbar = () => {
   } = useAppContext();
 
   const logout = async () => {
-
     try {
-
       const { data } = await axios.get('/api/user/logout')
       if(data.success){
         toast.success(data.message)
@@ -29,7 +27,6 @@ const Navbar = () => {
       }else{
         toast.error(data.message)
       }
-      
     } catch (error) {
          toast.error(error.message)
     }
@@ -42,130 +39,210 @@ const Navbar = () => {
   }, [searchQuery]);
 
   return (
-    <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all z-1">
-      <NavLink to="/" onClick={() => setOpen(false)}>
-        <h2 className="text-2xl text-primary-dull font-bold ">Quickmart</h2>
-      </NavLink>
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-soft">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <NavLink to="/" onClick={() => setOpen(false)} className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">Q</span>
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Quickmart
+            </span>
+          </NavLink>
 
-      <div className="hidden sm:flex items-center gap-8">
-        <NavLink to="/seller">Seller Login </NavLink>
-        <NavLink to="/">Home </NavLink>
-        <NavLink to="/products">Product</NavLink>
-        <NavLink to="/about">About </NavLink>
-        <NavLink to="/contact">Contact </NavLink>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <NavLink 
+              to="/" 
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+            >
+              Home
+            </NavLink>
+            <NavLink 
+              to="/products" 
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+            >
+              Products
+            </NavLink>
+            <NavLink 
+              to="/about" 
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+            >
+              About
+            </NavLink>
+            <NavLink 
+              to="/contact" 
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+            >
+              Contact
+            </NavLink>
+            <NavLink 
+              to="/seller" 
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+            >
+              Seller
+            </NavLink>
 
-        <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
-          <input
-            onChange={(e) => SetSearchQuery(e.target.value)}
-            className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
-            type="text"
-            placeholder="Search products"
-          />
-          <img src={assets.search_icon} alt="search" className="w-4 h-4" />
+            {/* Search Bar */}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <img src={assets.search_icon} alt="search" className="w-4 h-4 text-gray-400" />
+              </div>
+              <input
+                onChange={(e) => SetSearchQuery(e.target.value)}
+                className="block w-64 pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                type="text"
+                placeholder="Search products..."
+              />
+            </div>
+
+            {/* Cart */}
+            <div
+              onClick={() => navigate("/cart")}
+              className="relative cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+            >
+              <img
+                src={assets.nav_cart_icon}
+                alt="cart"
+                className="w-6 h-6 text-gray-600"
+              />
+              {getCartCount() > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                  {getCartCount()}
+                </span>
+              )}
+            </div>
+
+            {/* User Menu */}
+            {!user ? (
+              <button
+                onClick={() => SetShowUserLogin(true)}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:shadow-medium transition-all duration-200 hover-lift"
+              >
+                Sign In
+              </button>
+            ) : (
+              <div className="relative group">
+                <div className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors duration-200">
+                  <img src={assets.profile_icon} className="w-8 h-8 rounded-full" alt="Profile" />
+                  <span className="text-sm font-medium text-gray-700">{user.name}</span>
+                </div>
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-strong border border-gray-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div
+                    onClick={() => navigate("my-orders")}
+                    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                  >
+                    My Orders
+                  </div>
+                  <div
+                    onClick={logout}
+                    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                  >
+                    Sign Out
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center space-x-4">
+            <div
+              onClick={() => navigate("/cart")}
+              className="relative cursor-pointer p-2"
+            >
+              <img
+                src={assets.nav_cart_icon}
+                alt="cart"
+                className="w-6 h-6"
+              />
+              {getCartCount() > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {getCartCount()}
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => setOpen(!open)}
+              className="p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+            >
+              <img src={assets.menu_icon} alt="menu" className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
-        <div
-          onClick={() => navigate("/cart")}
-          className="relative cursor-pointer"
-        >
-          <img
-            src={assets.nav_cart_icon}
-            alt="cart"
-            className="w-6 opacity-80"
-          />
-          <button className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] h-[18px] rounded-full">
-            {getCartCount()}
-          </button>
-        </div>
-
-        {!user ? (
-          <button
-            onClick={() => SetShowUserLogin(true)}
-            className="cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition text-white rounded-full"
-          >
-            Login
-          </button>
-        ) : (
-          <div className="relative group">
-            <img src={assets.profile_icon} className="w-10" alt="" />
-            <ul className="hidden group-hover:block absolute top-10 right-0 bg-white shadow border border-gray-200 py-2.5 w-30 rounded-md text-sm z-40">
-              <li
-                onClick={() => navigate("my-orders")}
-                className="p-1.5 pl-3 hover:bg-primary/10 cursor-pointer"
+        {/* Mobile Navigation */}
+        {open && (
+          <div className="md:hidden border-t border-gray-100 py-4 space-y-2">
+            <NavLink 
+              to="/" 
+              onClick={() => setOpen(false)}
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+            >
+              Home
+            </NavLink>
+            <NavLink 
+              to="/products" 
+              onClick={() => setOpen(false)}
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+            >
+              Products
+            </NavLink>
+            <NavLink 
+              to="/about" 
+              onClick={() => setOpen(false)}
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+            >
+              About
+            </NavLink>
+            <NavLink 
+              to="/contact" 
+              onClick={() => setOpen(false)}
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+            >
+              Contact
+            </NavLink>
+            <NavLink 
+              to="/seller" 
+              onClick={() => setOpen(false)}
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+            >
+              Seller
+            </NavLink>
+            {user && (
+              <NavLink 
+                to="my-orders" 
+                onClick={() => setOpen(false)}
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
               >
                 My Orders
-              </li>
-              <li
-                onClick={logout}
-                className="p-1.5 pl-3 hover:bg-primary/10 cursor-pointer"
-              >
-                Logout
-              </li>
-            </ul>
+              </NavLink>
+            )}
+            <div className="px-4 pt-2">
+              {!user ? (
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    SetShowUserLogin(true);
+                  }}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:shadow-medium transition-all duration-200"
+                >
+                  Sign In
+                </button>
+              ) : (
+                <button
+                  onClick={logout}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:shadow-medium transition-all duration-200"
+                >
+                  Sign Out
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>
-      <div className="flex items-center gap-6 sm:hidden">
-        <div
-          onClick={() => navigate("/cart")}
-          className="relative cursor-pointer"
-        >
-          <img
-            src={assets.nav_cart_icon}
-            alt="cart"
-            className="w-6 opacity-80"
-          />
-          <button className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] h-[18px] rounded-full">
-            {getCartCount()}
-          </button>
-        </div>
-        <button
-          onClick={() => (open ? setOpen(false) : setOpen(true))}
-          aria-label="Menu"
-          className=""
-        >
-          <img src={assets.menu_icon} alt="menu" />
-        </button>
-      </div>
-
-      {open && (
-        <div
-          className={`${
-            open ? "flex" : "hidden"
-          } absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}
-        >
-          <NavLink to="/" onClick={() => setOpen(false)}>
-            Home
-          </NavLink>
-          <NavLink to="/products" onClick={() => setOpen(false)}>
-            Product
-          </NavLink>
-          {user && (
-            <NavLink to="products" onClick={() => setOpen(false)}>
-              My order
-            </NavLink>
-          )}
-          <NavLink to="/">Contact </NavLink>
-          {!user ? (
-            <button
-              onClick={() => {
-                setOpen(false);
-                SetShowUserLogin(true);
-              }}
-              className="cursor-pointer px-6 py-2 mt-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm"
-            >
-              Login
-            </button>
-          ) : (
-            <button
-              onClick={logout}
-              className="cursor-pointer px-6 py-2 mt-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm"
-            >
-              Logout
-            </button>
-          )}
-        </div>
-      )}
     </nav>
   );
 };

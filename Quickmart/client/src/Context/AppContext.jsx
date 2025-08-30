@@ -14,6 +14,7 @@ export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isSeller, setIsSeller] = useState(false);
+  const [sellerProfile, setSellerProfile] = useState(null);
   const [showUserLogin, SetShowUserLogin] = useState(false);
   const [products, SetProducts] = useState([]);
 
@@ -26,11 +27,14 @@ export const AppContextProvider = ({ children }) => {
       const { data } = await axios.get("/api/seller/is-auth");
       if (data.success) {
         setIsSeller(true);
+        setSellerProfile(data.profile || null);
       } else {
         setIsSeller(false);
+        setSellerProfile(null);
       }
     } catch (error) {
       setIsSeller(false);
+      setSellerProfile(null);
     }
   };
 
@@ -152,6 +156,8 @@ export const AppContextProvider = ({ children }) => {
     setUser,
     setIsSeller,
     isSeller,
+    sellerProfile,
+    setSellerProfile,
     showUserLogin,
     SetShowUserLogin,
     products,

@@ -3,7 +3,7 @@ import { useAppContext } from "../../Context/AppContext";
 import toast from 'react-hot-toast';
 
 const SellerLogin = () => {
-  const { isSeller, setIsSeller, navigate, axios } = useAppContext();
+  const { isSeller, setIsSeller, sellerProfile, setSellerProfile, navigate, axios } = useAppContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -11,13 +11,20 @@ const SellerLogin = () => {
     event.preventDefault();
     try {
       const { data } = await axios.post('/api/seller/login', { email, password });
+      console.log('Login response:', data); // Debug log
       if (data.success) {
         setIsSeller(true);
+        // Store the profile data returned from backend
+        if (data.profile) {
+          console.log('Setting profile:', data.profile); // Debug log
+          setSellerProfile(data.profile);
+        }
         navigate('/seller/dashboard');
       } else {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error('Login error:', error); // Debug log
       toast.error(error?.response?.data?.message || error.message);
     }
   };

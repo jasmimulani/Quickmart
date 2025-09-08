@@ -5,12 +5,12 @@ const AdminProfile = () => {
   const { sellerProfile } = useAppContext();
   const [imageError, setImageError] = useState(false);
 
-  // Admin photos with girls - using more reliable image URLs
+  // Admin photos with professional women administrators
   const adminPhotos = {
-    "1": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    "1": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face",
     "2": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face", 
     "3": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face",
-    "default": "https://images.unsplash.com/photo-1506792006437-256b665541e4?w=400&h=400&fit=crop&crop=face"
+    "default": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face"
   };
 
   // Fallback images using data URLs (base64 encoded simple avatars)

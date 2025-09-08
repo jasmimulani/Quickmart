@@ -11,18 +11,23 @@ const Home = () => {
       <section aria-label="Main banner">
         <MainBanner />
       </section>
-      <section aria-label="Product categories" className="mt-12">
-        <Categoris />
-      </section>
-      <section aria-label="Best sellers" className="mt-12">
-        <BestSeller />
-      </section>
-      <section aria-label="Why we are the best" className="mt-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section aria-label="Product categories" className="mt-16">
+          <Categoris />
+        </section>
+        <hr className="mt-12 border-gray-200/60" />
+        <section aria-label="Best sellers" className="mt-12">
+          <BestSeller />
+        </section>
+      </div>
+      <section aria-label="Why we are the best" className="mt-20">
         <BottomBanner />
       </section>
-      <section aria-label="Newsletter" className="mt-16">
-        <NewLetter />
-      </section>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section aria-label="Newsletter" className="mt-20">
+          <NewLetter />
+        </section>
+      </div>
     </main>
   )
 }

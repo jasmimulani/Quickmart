@@ -39,7 +39,7 @@ const Navbar = () => {
   }, [searchQuery]);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-soft">
+    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -56,31 +56,31 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <NavLink 
               to="/" 
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+              className={({isActive}) => `font-medium transition-colors duration-200 ${isActive ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
             >
               Home
             </NavLink>
             <NavLink 
               to="/products" 
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+              className={({isActive}) => `font-medium transition-colors duration-200 ${isActive ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
             >
               Products
             </NavLink>
             <NavLink 
               to="/about" 
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+              className={({isActive}) => `font-medium transition-colors duration-200 ${isActive ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
             >
               About
             </NavLink>
             <NavLink 
               to="/contact" 
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+              className={({isActive}) => `font-medium transition-colors duration-200 ${isActive ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
             >
               Contact
             </NavLink>
             <NavLink 
               to="/seller" 
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+              className={({isActive}) => `font-medium transition-colors duration-200 ${isActive ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
             >
               Seller
             </NavLink>
@@ -92,7 +92,7 @@ const Navbar = () => {
               </div>
               <input
                 onChange={(e) => SetSearchQuery(e.target.value)}
-                className="block w-64 pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className="block w-72 pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 type="text"
                 placeholder="Search products..."
               />
@@ -109,7 +109,7 @@ const Navbar = () => {
                 className="w-6 h-6 text-gray-600"
               />
               {getCartCount() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
                   {getCartCount()}
                 </span>
               )}
@@ -119,7 +119,7 @@ const Navbar = () => {
             {!user ? (
               <button
                 onClick={() => SetShowUserLogin(true)}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:shadow-medium transition-all duration-200 hover-lift"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 hover:shadow-medium hover-lift"
               >
                 Sign In
               </button>

@@ -9,19 +9,19 @@ const ProductCard = ({ product }) => {
     return product && (
         <div
             onClick={() => { navigate(`/products/${product.category.toLowerCase()}/${product._id}`); scrollTo(0, 0) }}
-            className="group bg-white rounded-2xl border border-gray-100 shadow-soft hover-lift cursor-pointer overflow-hidden transition-all duration-300"
+            className="group bg-white rounded-2xl border border-gray-100 shadow-soft hover:shadow-medium hover:-translate-y-0.5 cursor-pointer overflow-hidden transition-all duration-300"
         >
             {/* Product Image */}
             <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
                 <img 
-                    className="group-hover:scale-110 transition-transform duration-300 max-h-32 w-auto object-contain" 
+                    className="group-hover:scale-105 transition-transform duration-300 max-h-32 w-auto object-contain" 
                     src={product.image[0]} 
                     alt={product.name} 
                 />
                 
                 {/* Category Badge */}
                 <div className="absolute top-3 left-3">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 ring-1 ring-blue-200">
                         {product.category}
                     </span>
                 </div>
@@ -29,7 +29,7 @@ const ProductCard = ({ product }) => {
                 {/* Discount Badge */}
                 {product.price > product.offerprice && (
                     <div className="absolute top-3 right-3">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 ring-1 ring-red-200">
                             {Math.round(((product.price - product.offerprice) / product.price) * 100)}% OFF
                         </span>
                     </div>
@@ -73,7 +73,7 @@ const ProductCard = ({ product }) => {
                 <div className="w-full">
                     {!cartItems[product._id] ? (
                         <button 
-                            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-medium transition-all duration-200 hover-lift"
+                            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-medium transition-all duration-200 hover:shadow-medium hover:-translate-y-0.5"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 addToCart(product._id);

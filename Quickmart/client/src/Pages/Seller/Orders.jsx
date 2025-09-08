@@ -11,22 +11,13 @@ const Orders = () => {
    const fetchOrders = async () =>{
     setLoading(true)
     try {
-        console.log('Fetching orders...');
         const {data} = await axios.get('/api/order/seller')
-        console.log('Orders response:', data);
-        console.log('Orders data type:', typeof data);
-        console.log('Orders data keys:', Object.keys(data));
-        
         if(data.success){
-            console.log('Orders array:', data.orders);
-            console.log('Orders array length:', data.orders?.length);
             setOrders(data.orders || [])
         }else{
-            console.log('API returned error:', data.message);
             toast.error(data.message)
         }
     } catch (error) {
-        console.error('Error fetching orders:', error);
         toast.error(error.message)
     } finally {
         setLoading(false)
@@ -87,7 +78,6 @@ useEffect(() =>{
 
                         <p>{order.address?.street || 'N/A'}, {order.address?.city || 'N/A'}</p>
                         <p> {order.address?.state || 'N/A'},{order.address?.zipcode || 'N/A'}, {order.address?.country || 'N/A'}</p>
-                        <p></p>
                         <p>{order.address?.phone || 'N/A'}</p>
                     </div>
 

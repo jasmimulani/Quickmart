@@ -9,7 +9,7 @@ const SellerLayout = () => {
   const { axios, navigate, setIsSeller, sellerProfile, setSellerProfile } = useAppContext();
 
     const sidebarLinks = [
-    { name: "Admin Profile ", path: "/seller/dashboard", icon: assets.order_icon },
+    { name: "Admin Profile ", path: "/seller/dashboard", icon: assets.profile_icon},
     { name: "Add product", path: "/seller/dashboard/add-product", icon: assets.add_icon },
     {      
       name: "Product List",
@@ -17,7 +17,7 @@ const SellerLayout = () => {
       icon: assets.product_list_icon,
     },
     { name: "Orders", path: "/seller/dashboard/orders", icon: assets.order_icon },
-    // { name: "User", path: "/seller/dashboard/orders", icon: assets.order_icon },
+    { name: "User-list", path: "/seller/dashboard/user-list", icon: assets.product_list_icon },
   ];
 
   const logout = async () => {

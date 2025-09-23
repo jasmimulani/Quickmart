@@ -21,6 +21,7 @@ import Orders from './Pages/Seller/Orders'
 import Loading from './Components/Loading'
 import About from './Pages/About'
 import ContactUs from './Pages/ContactUs'
+import UserList from './Pages/Seller/UserList'
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller")
@@ -52,6 +53,7 @@ const App = () => {
             <Route index element={<AdminProfile/>} />
             <Route path="add-product" element={<AddProduct />} />
             <Route path="product-list" element={<ProductList />} />
+            <Route path="user-list" element={<UserList/>} />
             <Route path="orders" element={<Orders />} />
           </Route>
         </Routes>

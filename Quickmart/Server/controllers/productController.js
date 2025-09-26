@@ -35,6 +35,48 @@ await Product.create({ ...productData, image: imagesUrl });
 };
 
 
+// update product (basic fields; optionally images in future)
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatableFields = [
+      'name',
+      'description',
+      'category',
+      'price',
+      'offerPrice',
+      'offerprice',
+      'inStock'
+    ];
+
+    const update = {};
+    for (const key of updatableFields) {
+      if (req.body[key] !== undefined) {
+        update[key] = req.body[key];
+      }
+    }
+
+    if (update.offerPrice !== undefined) {
+      update.offerprice = update.offerPrice;
+      delete update.offerPrice;
+    }
+
+    if (typeof update.description === 'string') {
+      update.description = update.description.split('\n');
+    }
+
+    const updated = await Product.findByIdAndUpdate(id, update, { new: true });
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+    res.json({ success: true, message: 'Product updated', product: updated });
+  } catch (error) {
+    console.error('UPDATE PRODUCT ERROR:', error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 //  get product  
 export const ProductList = async (req,res) =>{
   try {
@@ -77,3 +119,18 @@ export const changeStock = async (req,res) =>{
       
   }
 } 
+
+// delete product
+export const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Product.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+    res.json({ success: true, message: 'Product deleted' });
+  } catch (error) {
+    console.error('DELETE PRODUCT ERROR:', error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+}

@@ -74,10 +74,9 @@ useEffect(() =>{
                     </div>
 
                     <div className="text-sm md:text-base text-black/60">
-                        <p className='text-black/80'>{order.address?.firstName || 'N/A'} {order.address?.lastName || 'N/A'}</p>
-
+                       
                         <p>{order.address?.street || 'N/A'}, {order.address?.city || 'N/A'}</p>
-                        <p> {order.address?.state || 'N/A'},{order.address?.zipcode || 'N/A'}, {order.address?.country || 'N/A'}</p>
+                        <p> {order.address?.state || 'N/A'},{order.address?.zipcode || 'N/A'}</p>
                         <p>{order.address?.phone || 'N/A'}</p>
                     </div>
 

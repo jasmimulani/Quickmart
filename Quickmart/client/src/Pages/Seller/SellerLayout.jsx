@@ -40,9 +40,9 @@ const SellerLayout = () => {
     <>
       <div className="flex items-center justify-between px-4 md:px-8 border-b border-gray-300 py-3 bg-white ">
         <Link to={"/"}>
-          <h2 className="text-2xl text-primary-dull font-bold ">
-            Green Basket
-          </h2>
+         <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Quickmart
+            </span>
         </Link>
         <div className="flex items-center gap-5 text-gray-500">
           <p>Hi! {sellerProfile?.name || 'Admin'}</p>

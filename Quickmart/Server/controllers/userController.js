@@ -1,24 +1,31 @@
 import User from "../models/User.js";
-import Log from "../models/Log.js"; // new Log model
+import Log from "../models/Log.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-//  register api
+/**
+ * REGISTER USER
+ */
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.json({ success: false, message: "missing Details" });
+      return res.json({ success: false, message: "Missing details" });
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser)
-      return res.json({ success: false, message: "User already existing" });
+      return res.json({ success: false, message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      isActive: true,
+      isLoggedIn: false,
+    });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -33,15 +40,18 @@ export const register = async (req, res) => {
 
     return res.json({
       success: true,
-      message: { email: user.email, name: user.name },
+      message: "Registration successful",
+      user: { email: user.email, name: user.name },
     });
   } catch (error) {
-    console.log(error.message);
+    console.error("Register Error:", error);
     res.json({ success: false, message: error.message });
   }
 };
 
-//  login user api
+/**
+ * LOGIN USER
+ */
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -49,19 +59,25 @@ export const login = async (req, res) => {
     if (!email || !password)
       return res.json({
         success: false,
-        message: "email and password are required",
+        message: "Email and password are required",
       });
 
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.json({ success: false, message: "invalid email or password" });
-    }
+    if (!user)
+      return res.json({ success: false, message: "Invalid email or password" });
 
-    const ismatch = await bcrypt.compare(password, user.password);
-    if (!ismatch)
-      return res.json({ success: false, message: "invalid email or password" });
+    // Check if user is blocked
+    if (!user.isActive)
+      return res.json({
+        success: false,
+        message: "Your account is blocked. Contact admin.",
+      });
 
-    // set user as logged in
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.json({ success: false, message: "Invalid email or password" });
+
+    // Mark user as logged in
     user.isLoggedIn = true;
     await user.save();
 
@@ -78,35 +94,49 @@ export const login = async (req, res) => {
 
     return res.json({
       success: true,
-      message: { email: user.email, name: user.name },
+      message: "Login successful",
+      user: { email: user.email, name: user.name },
     });
   } catch (error) {
-    console.log(error.message);
+    console.error("Login Error:", error);
     res.json({ success: false, message: error.message });
   }
 };
 
-//  auth user
+/**
+ * AUTHENTICATE USER (check if token valid)
+ */
 export const isAuth = async (req, res) => {
   try {
     const { userId } = req.body;
+    if (!userId)
+      return res.json({ success: false, message: "User ID is required" });
+
     const user = await User.findById(userId).select("-password");
+    if (!user)
+      return res.json({ success: false, message: "User not found" });
 
     return res.json({ success: true, user });
   } catch (error) {
-    console.log(error.message);
+    console.error("Auth Error:", error);
     res.json({ success: false, message: error.message });
   }
 };
 
-//  logout user
+/**
+ * LOGOUT USER
+ */
 export const logout = async (req, res) => {
   try {
-    const tokenUser = await User.findOne({ /* find user by token if needed */ });
-
-    if (tokenUser) {
-      tokenUser.isLoggedIn = false; // set logged in to false
-      await tokenUser.save();
+    // Ideally, you'd get user info from decoded JWT
+    const token = req.cookies?.token;
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.id);
+      if (user) {
+        user.isLoggedIn = false;
+        await user.save();
+      }
     }
 
     res.clearCookie("token", {
@@ -115,53 +145,67 @@ export const logout = async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     });
 
-    return res.json({ success: true, message: "logged Out." });
+    return res.json({ success: true, message: "Logged out successfully" });
   } catch (error) {
-    console.log(error.message);
+    console.error("Logout Error:", error);
     res.json({ success: false, message: error.message });
   }
 };
 
-//  get all users (for admin panel)
+/**
+ * GET ALL USERS (Admin)
+ */
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password"); // exclude password
-    return res.json({ success: true, users, total: users.length });
+    const users = await User.find().select("-password");
+    return res.json({
+      success: true,
+      users,
+      total: users.length,
+    });
   } catch (error) {
-    console.log(error.message);
+    console.error("GetAllUsers Error:", error);
     res.json({ success: false, message: error.message });
   }
 };
 
-//  toggle user active/block status
+/**
+ * TOGGLE USER ACTIVE/BLOCK STATUS (Admin)
+ */
 export const toggleUser = async (req, res) => {
   try {
     const { id, isActive } = req.body;
 
     if (!id || typeof isActive !== "boolean") {
-      return res.status(400).json({ success: false, message: "Missing parameters" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing or invalid parameters" });
     }
 
     const user = await User.findById(id);
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+    if (!user)
+      return res.status(404).json({ success: false, message: "User not found" });
 
     user.isActive = isActive;
     await user.save();
 
-    // Log if blocked and not logged in
+    // If blocked and not logged in, log this action
     if (!isActive && !user.isLoggedIn) {
-      const log = new Log({
+      await Log.create({
         userId: user._id,
         email: user.email,
         reason: "Blocked while not logged in",
+        timestamp: new Date(),
       });
-      await log.save();
       console.log(`Logged block action for ${user.email}`);
     }
 
-    return res.json({ success: true, message: `User is now ${isActive ? "Active" : "Blocked"}` });
+    return res.json({
+      success: true,
+      message: `User is now ${isActive ? "Active" : "Blocked"}`,
+    });
   } catch (error) {
-    console.log(error.message);
-    return res.status(500).json({ success: false, message: error.message });
+    console.error("ToggleUser Error:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };

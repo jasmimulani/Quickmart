@@ -13,10 +13,16 @@ const Login = () => {
   const onSubmitHandler = async (event) => {
     try {
       event.preventDefault();
+      // Client-side validation: email must contain '@' and end with '.com'
+      const emailLower = String(email || "").trim().toLowerCase();
+      if (!emailLower.includes("@") || !emailLower.endsWith(".com")) {
+        toast.error("Please enter a valid email that contains '@' and ends with '.com'");
+        return;
+      }
 
       const { data } = await axios.post(`/api/user/${state}`, {
         name,
-        email,
+        email: emailLower,
         password,
       });
       if (data.success) {

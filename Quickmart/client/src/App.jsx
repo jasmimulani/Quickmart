@@ -31,7 +31,32 @@ const App = () => {
     <div className='text-default min-h-screen text-gray-700 bg-white'>
       {!isSellerPath && <Navbar />}
       {showUserLogin && <Login />}
-      <Toaster />
+      <Toaster
+        position="top-right" // required by library, but we override with containerStyle below
+        containerStyle={{
+          top: '50%',
+          right: '20px',
+          transform: 'translateY(-50%)', // centers vertically
+        }}
+        toastOptions={{
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+          success: {
+            iconTheme: {
+              primary: 'green',
+              secondary: 'white',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: 'red',
+              secondary: 'white',
+            },
+          },
+        }}
+      />
 
       <div className={`${isSellerPath ? "" : " px-6 md:px-16 lg:px-24 xl:px-32"} `}>
         <Routes>

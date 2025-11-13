@@ -28,8 +28,11 @@ const Cart = () => {
     let tempArray = [];
     for (const key in cartItems) {
       const product = products.find((item) => item._id === key);
-      product.quantity = cartItems[key];
-      tempArray.push(product);
+      // guard: product may be undefined if products not loaded yet
+      if (!product) continue;
+      // do not mutate original product object from products state
+      const productCopy = { ...product, quantity: cartItems[key] };
+      tempArray.push(productCopy);
     }
     setCartArray(tempArray);
   };
@@ -147,29 +150,33 @@ const Cart = () => {
               </div>
               <div>
                 <p className="hidden md:block font-semibold">{product.name}</p>
-                <div className="font-normal text-gray-500/70">
-                  {/* <p>
-                    Weight: <span>{product.weight || "N/A"}</span>
-                  </p> */}
-                  <div className="flex items-center">
-                    <p>Qty:</p>
-                    <select
-                      onChange={(e) =>
-                        updateCartItem(product._id, Number(e.target.value))
-                      }
-                      value={cartItems[product._id]}
-                      className="outline-none"
-                    >
-                      {Array(
-                        cartItems[product._id] > 9 ? cartItems[product._id] : 9
-                      )
-                        .fill("")
-                        .map((_, index) => (
-                          <option key={index} value={index + 1}>
-                            {index + 1}
-                          </option>
-                        ))}
-                    </select>
+                <div className="font-normal text-gray-500/70 mt-2">
+                  <div className="flex items-center gap-3 mt-2">
+                    <p className="text-xs text-gray-500 uppercase">Qty:</p>
+                    <div className="flex items-center justify-center gap-2 w-20 h-8 bg-gray-100 rounded-lg border border-gray-200">
+                      <button
+                        onClick={() => {
+                          const newQty = cartItems[product._id] - 1;
+                          if (newQty > 0) {
+                            updateCartItem(product._id, newQty);
+                          } else {
+                            removeFromeCart(product._id);
+                          }
+                        }}
+                        className="cursor-pointer font-bold text-primary hover:text-primary-dull transition px-2 h-full flex items-center"
+                      >
+                        −
+                      </button>
+                      <span className="w-6 text-center font-semibold text-gray-700">
+                        {cartItems[product._id]}
+                      </span>
+                      <button
+                        onClick={() => updateCartItem(product._id, cartItems[product._id] + 1)}
+                        className="cursor-pointer font-bold text-primary hover:text-primary-dull transition px-2 h-full flex items-center"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -227,7 +234,7 @@ const Cart = () => {
               onClick={() => setShowAddress(!showAddress)}
               className="text-primary hover:underline cursor-pointer"
             >
-              Change
+             Add-Address
             </button>
             {showAddress && (
               <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
@@ -280,13 +287,13 @@ const Cart = () => {
             <span>Shipping Fee</span>
             <span className="text-green-600">Free</span>
           </p>
-         <p className="flex justify-between">
+         {/* <p className="flex justify-between">
   <span>Tax (2%)</span>
   <span>
     {currency}
     {getCartAmount() + (getCartAmount() * 2) / 100}
   </span>
-</p>
+</p> */}
 <p className="flex justify-between text-lg font-medium mt-3">
   <span>Total Amount:</span>
   <span>

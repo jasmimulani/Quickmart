@@ -14,17 +14,22 @@ const Orders = () => {
         const {data} = await axios.get('/api/order/seller')
         if(data.success){
             setOrders(data.orders || [])
+            console.log('Orders fetched:', data.orders); // Log for debugging
         }else{
             toast.error(data.message)
         }
     } catch (error) {
         toast.error(error.message)
+        console.error('Error fetching orders:', error);
     } finally {
         setLoading(false)
     }
    };
 useEffect(() =>{
     fetchOrders();
+    // Auto-refresh orders every 5 seconds to catch payment updates from webhook
+    const interval = setInterval(fetchOrders, 5000);
+    return () => clearInterval(interval);
 },[])
 
 
@@ -34,11 +39,7 @@ useEffect(() =>{
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <h2 className="text-lg font-medium">Orders List</h2>
                 <div className="flex items-center gap-4">
-                    <div className="flex gap-4 text-sm">
-                        <span className="text-gray-600">Total: {orders.length}</span>
-                        <span className="text-green-600">Paid: {orders.filter(order => order.isPaid).length}</span>
-                        <span className="text-orange-600">Pending: {orders.filter(order => !order.isPaid).length}</span>
-                    </div>
+                    <span className="text-gray-600 text-sm font-medium">Total Orders: {orders.length}</span>
                     <button 
                         onClick={fetchOrders}
                         disabled={loading}
@@ -83,11 +84,11 @@ useEffect(() =>{
                     <p className="font-medium text-base my-auto ">{currency}{order.amount}</p>
 
                     <div className="flex flex-col text-sm md:text-base text-black/60">
-                        <p>Method: {order.paymentType}</p>
+                        <p>Method: <span className={`font-medium ${order.paymentType === 'Online' ? 'text-blue-600' : 'text-purple-600'}`}>{order.paymentType === 'Online' ? ' Online' : ' COD'}</span></p>
                         <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-                        <p className={`font-medium ${order.isPaid ? 'text-green-600' : 'text-orange-600'}`}>
-                            Payment: {order.isPaid ? "✅ Paid" : "⏳ Pending"}
-                        </p>
+                        {/* <p className={`font-medium text-base ${order.isPaid ? 'text-green-600' : 'text-orange-600'}`}>
+                            {order.isPaid ? "✅ Paid" : "⏳ Pending"}
+                        </p> */}
                     </div>
                 </div>
                 )

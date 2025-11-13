@@ -29,6 +29,7 @@ export const placeOrderCOD = async (req, res) => {
       amount,
       address,
       paymentType: "COD",
+      isPaid: true, // COD is marked as paid (user will pay in person)
     });
 
     return res.json({ success: true, message: "Order placed successfully" });
@@ -70,7 +71,7 @@ export const placeOrderStripe = async (req, res) => {
       amount,
       address,
       paymentType: "Online",
-      isPaid: false, // Will be updated after payment confirmation
+      isPaid: false, // Online payment is pending until Stripe webhook confirms
     });
 
     const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);

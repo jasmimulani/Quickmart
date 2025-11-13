@@ -19,6 +19,8 @@ export const AppContextProvider = ({ children }) => {
   const [products, SetProducts] = useState([]);
 
   const [cartItems, SetCartItems] = useState({});
+  // store an item id attempted to add when user is not logged in
+  const [pendingAdd, setPendingAdd] = useState(null);
   const [searchQuery, SetSearchQuery] = useState({});
 
   //  fetch seller satus
@@ -69,6 +71,15 @@ export const AppContextProvider = ({ children }) => {
   // add product in cart
 
   const addToCart = (itemId) => {
+    // require authentication to add to cart
+    if (!user) {
+      // open login modal and remember pending add
+      setPendingAdd(itemId);
+      SetShowUserLogin(true);
+      toast.error("Please login or register to add items to cart.");
+      return;
+    }
+
     let cartData = structuredClone(cartItems);
 
     if (cartData[itemId]) {
@@ -79,6 +90,22 @@ export const AppContextProvider = ({ children }) => {
     SetCartItems(cartData);
     toast.success("Added To Cart.");
   };
+
+  // if user logs in and there was a pending add, perform it automatically
+  useEffect(() => {
+    if (user && pendingAdd) {
+      const itemId = pendingAdd;
+      setPendingAdd(null);
+      let cartData = structuredClone(cartItems || {});
+      if (cartData[itemId]) {
+        cartData[itemId] += 1;
+      } else {
+        cartData[itemId] = 1;
+      }
+      SetCartItems(cartData);
+      toast.success("Added To Cart.");
+    }
+  }, [user]);
 
   // update cart item
   const updateCartItem = (itemId, quantity) => {
@@ -105,11 +132,9 @@ export const AppContextProvider = ({ children }) => {
   //  get cart item
 
   const getCartCount = () => {
-    let totalCount = 0;
-    for (const item in cartItems) {
-      totalCount += cartItems[item];
-    }
-    return totalCount;
+    // Return number of distinct product IDs in cartItems (not sum of quantities)
+    if (!cartItems) return 0;
+    return Object.keys(cartItems).length;
   };
 
   //   get cart total

@@ -14,14 +14,20 @@ export const register = async (req, res) => {
       return res.json({ success: false, message: "Missing details" });
     }
 
-    const existingUser = await User.findOne({ email });
+    // Enforce email contains '@' and ends with '.com'
+    const emailLower = String(email).trim().toLowerCase();
+    if (!emailLower.includes("@") || !emailLower.endsWith(".com")) {
+      return res.json({ success: false, message: "Email must contain '@' and end with '.com'" });
+    }
+
+    const existingUser = await User.findOne({ email: emailLower });
     if (existingUser)
       return res.json({ success: false, message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       name,
-      email,
+      email: emailLower,
       password: hashedPassword,
       isActive: true,
       isLoggedIn: false,
@@ -62,7 +68,13 @@ export const login = async (req, res) => {
         message: "Email and password are required",
       });
 
-    const user = await User.findOne({ email });
+    // Enforce email format: must contain '@' and end with '.com'
+    const emailLower = String(email).trim().toLowerCase();
+    if (!emailLower.includes("@") || !emailLower.endsWith(".com")) {
+      return res.json({ success: false, message: "Email must contain '@' and end with '.com'" });
+    }
+
+  const user = await User.findOne({ email: emailLower });
     if (!user)
       return res.json({ success: false, message: "Invalid email or password" });
 

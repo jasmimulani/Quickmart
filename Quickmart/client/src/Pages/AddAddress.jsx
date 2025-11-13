@@ -17,7 +17,7 @@
   );
 
   const AddAddress = () => {
-    const { axios, navigate, user } = useAppContext();
+    const { axios, navigate, user, SetShowUserLogin } = useAppContext();
 
     const [address, setAddress] = useState({
       firstname: "",
@@ -62,6 +62,8 @@
 
     useEffect(() => {
       if (!user) {
+        // If not logged in, open the login modal and send user back to cart
+        if (typeof SetShowUserLogin === 'function') SetShowUserLogin(true);
         navigate("/cart");
       }
     }, [user]); 

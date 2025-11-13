@@ -89,14 +89,14 @@ const AdminProfile = () => {
               </div>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="/seller/dashboard" className="inline-flex items-center gap-2 rounded-md bg-gray-900 text-white px-4 py-2 text-sm font-medium hover:bg-black">
-                Go to Dashboard
+            {/* <div className="mt-6 flex flex-wrap gap-3">
+              <a href="/seller/dashboard/orders" className="inline-flex items-center gap-2 rounded-md bg-gray-900 text-white px-4 py-2 text-sm font-medium hover:bg-black">
+               View Orders 
               </a>
-              <a href="/seller/dashboard/orders" className="inline-flex items-center gap-2 rounded-md bg-white border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                View Orders
+              <a href="/seller/dashboard/user-list" className="inline-flex items-center gap-2 rounded-md bg-white border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                View Users
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

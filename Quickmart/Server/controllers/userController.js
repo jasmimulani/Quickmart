@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import Log from "../models/Log.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import sendEmail from "../utils/sendEmail.js";
 
 /**
  * REGISTER USER
@@ -32,6 +33,12 @@ export const register = async (req, res) => {
       isActive: true,
       isLoggedIn: false,
     });
+
+    await sendEmail(
+      user.email,
+      "Welcome to QuickMart",
+      `<h2>Hello ${user.name}</h2><p>Thank you for registering on QuickMart!</p>`
+    );
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",

@@ -2,6 +2,7 @@ import Product from "../models/product.js";
 import Order from "../models/Order.js";
 import Stripe from "stripe";
 import User from "../models/User.js";
+import sendOrderEmail from "../utils/sendOrderEmail.js";
 
 // COD order: /api/order/cod
 export const placeOrderCOD = async (req, res) => {
@@ -23,7 +24,7 @@ export const placeOrderCOD = async (req, res) => {
     // Add 2% tax
     amount += Math.floor(amount * 0.02);
 
-    await Order.create({
+    const order = await Order.create({
       userId,
       items,
       amount,
@@ -31,6 +32,8 @@ export const placeOrderCOD = async (req, res) => {
       paymentType: "COD",
       isPaid: true, // COD is marked as paid (user will pay in person)
     });
+
+    await sendOrderEmail(userId, order);
 
     return res.json({ success: true, message: "Order placed successfully" });
   } catch (error) {
@@ -128,8 +131,13 @@ export const Stripewebhooks = async (req, res) => {
       console.log("Checkout completed: ", { orderId, userId });
 
       try {
-        await Order.findByIdAndUpdate(orderId, { isPaid: true });
+        const updatedOrder = await Order.findByIdAndUpdate(
+          orderId,
+          { isPaid: true },
+          { new: true }
+        );
         await User.findByIdAndUpdate(userId, { cartItems: {} }); // clear cart
+        await sendOrderEmail(userId, updatedOrder);
         console.log("Order updated successfully:", orderId);
       } catch (error) {
         console.error("Error updating order:", error);

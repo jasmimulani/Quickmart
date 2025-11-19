@@ -64,9 +64,9 @@ const testEmail = async () => {
 
     console.log("✓ Test email sent successfully!");
     console.log(`   Message ID: ${info.messageId}\n`);
-    console.log("✅ All systems ready! Start your server with: npm run dev\n");
+    console.log(" All systems ready! Start your server with: npm run dev\n");
   } catch (error) {
-    console.error("❌ Failed to send test email:");
+    console.error("Failed to send test email:");
     console.error(error.message);
     process.exit(1);
   }

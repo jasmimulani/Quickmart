@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { useAppContext } from "../Context/AppContext";
 import toast from "react-hot-toast";
+import Contact from "../../../Server/models/Contact";
 
 const ContactUs = () => {
   const { axios } = useAppContext();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    contact: "",
     message: "",
   });
   const [loading, setLoading] = useState(false);
@@ -19,19 +21,19 @@ const ContactUs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, message } = formData;
+    const { name, email,contact, message } = formData;
 
-    if (!name.trim() || !email.trim() || !message.trim()) {
+    if (!name.trim() || !email.trim() || !contact.trim()||!message.trim()) {
       toast.error("Please fill in all fields");
       return;
     }
 
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/contact/contact", { name, email, message });
+      const { data } = await axios.post("/api/contact/contact", { name, email,contact, message  });
       if (data.success) {
         toast.success("Thanks for contacting QuickMart!");
-        setFormData({ name: "", email: "", message: "" });
+        setFormData({ name: "", email: "", message: "" , contact: "" });
       } else {
         toast.error(data.message || "Something went wrong. Try again later.");
       }
@@ -94,6 +96,16 @@ const ContactUs = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="your@email.com"
+              required
+            />
+
+             <FormField
+              label="contat"
+              type="text"
+              name="contact"
+              value={formData.contact}
+              onChange={handleChange}
+              placeholder="Your contact number"
               required
             />
             <div style={{ marginBottom: "20px" }}>

@@ -100,7 +100,7 @@ const ContactUs = () => {
             />
 
              <FormField
-              label="contat"
+              label="contact"
               type="text"
               name="contact"
               value={formData.contact}

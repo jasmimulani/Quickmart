@@ -21,7 +21,7 @@ import { Stripewebhooks } from './controllers/orderController.js';
 const app = express();
 
 // Environment PORT
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 5000;
 
 // Connect to DB and Cloudinary
 await connectDB();

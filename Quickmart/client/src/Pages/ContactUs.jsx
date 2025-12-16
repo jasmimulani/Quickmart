@@ -105,7 +105,7 @@ const ContactUs = () => {
               name="contact"
               value={formData.contact}
               onChange={handleChange}
-              placeholder="Your contact number"
+              placeholder= "Your contact number"
               required
             />
             <div style={{ marginBottom: "20px" }}>

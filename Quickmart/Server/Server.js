@@ -39,7 +39,7 @@ app.use(cors({
 app.post('/stripe', express.raw({ type: 'application/json' }), Stripewebhooks);
 
 // API root
-app.get('/', (req, res) => res.send("API is working"));
+app.get('/', (req, res) => res.send("API is workingg."));
 
 // API routes
 app.use('/api/user', userRouter);

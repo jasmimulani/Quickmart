@@ -72,10 +72,10 @@ const startServer = async () => {
     await connectCloudinary();
 
     app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("❌ Server failed to start:", error.message);
+    console.error("Server failed to start:", error.message);
     process.exit(1);
   }
 };

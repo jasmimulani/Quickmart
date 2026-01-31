@@ -49,7 +49,7 @@ app.use(
    ROUTES
    ====================== */
 app.get("/", (req, res) => {
-  res.status(200).send("API is working 🚀");
+  res.status(200).send("API is working ");
 });
 
 app.use("/api/user", userRouter);

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { useAppContext } from "../Context/AppContext";
 import toast from "react-hot-toast";
-import Contact from "../../../Server/models/Contact";
 
 const ContactUs = () => {
   const { axios } = useAppContext();

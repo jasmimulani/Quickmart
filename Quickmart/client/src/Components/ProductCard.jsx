@@ -4,7 +4,7 @@ import { useAppContext } from "../Context/AppContext";
 
 const ProductCard = ({ product }) => {
   const [count, setCount] = React.useState(0);
-  const { currency, addToCart, removeFromeCart, cartItems, navigate } =
+  const { currency, addToCart, removeFromCart, cartItems, navigate } =
     useAppContext();
 
   return (
@@ -116,7 +116,7 @@ const ProductCard = ({ product }) => {
                   className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-soft hover:shadow-medium transition-all duration-200 text-gray-600 hover:text-gray-900"
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeFromeCart(product._id);
+                    removeFromCart(product._id);
                   }}
                 >
                   <svg

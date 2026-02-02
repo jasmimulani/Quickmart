@@ -4,15 +4,32 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 // ======================
-// SIMPLE AND CORRECT BACKEND URL CONFIGURATION
+// DEPLOYMENT READY BACKEND URL CONFIGURATION
 // ======================
-const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const getBackendUrl = () => {
+  // Check for environment variable first
+  if (import.meta.env.VITE_BACKEND_URL) {
+    return import.meta.env.VITE_BACKEND_URL;
+  }
+  
+  // For production, use the same origin as frontend
+  if (import.meta.env.PROD) {
+    return window.location.origin;
+  }
+  
+  // Development fallback
+  return "http://localhost:5000";
+};
+
+const backendUrl = getBackendUrl();
 
 console.log("🌐 API Base URL:", backendUrl);
+console.log("🌐 Environment:", import.meta.env.MODE);
 
 const axiosInstance = axios.create({
   baseURL: backendUrl,
   withCredentials: true,
+  timeout: 10000, // Add timeout for better error handling
 });
 
 // Also align global axios defaults
@@ -69,18 +86,25 @@ export const AppContextProvider = ({ children }) => {
   // Fetch products
   const fetchProducts = async () => {
     try {
+      console.log("🔄 Fetching products...");
       const response = await axiosInstance.get("/api/product/list");
       const { data } = response;
+      console.log("📦 Raw API response:", data);
 
       if (data && data.success && data.products) {
+        console.log("✅ Products found:", data.products.length);
         SetProducts(data.products);
       } else if (data && Array.isArray(data.products)) {
+        console.log("✅ Products array found:", data.products.length);
         SetProducts(data.products);
       } else if (Array.isArray(data)) {
+        console.log("✅ Direct array found:", data.length);
         SetProducts(data);
+      } else {
+        console.log("❌ No products found in response");
       }
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("❌ Error fetching products:", error);
       toast.error("Failed to fetch products");
     }
   };

@@ -39,10 +39,32 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // ======================
-// CORS CONFIGURATION - FINAL FIX
+// CORS CONFIGURATION - DEPLOYMENT READY
 // ======================
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://quickmart-frontend-sntg.onrender.com",
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: ["http://localhost:5173", "https://quickmart-frontend-sntg.onrender.com"],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow all localhost and 127.0.0.1 origins in development
+    if (process.env.NODE_ENV !== 'production' && 
+        (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'production') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]

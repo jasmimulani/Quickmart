@@ -4,6 +4,10 @@ import { useAppContext } from "../Context/AppContext";
 
 const BestSeller = () => {
   const { products } = useAppContext();
+  
+  console.log("🛍️ BestSeller - Products received:", products);
+  console.log("🛍️ BestSeller - In-stock products:", products?.filter(p => p.inStock));
+  
   return (
     <div className="mt-16">
       <div className="flex items-center justify-between">
@@ -14,9 +18,10 @@ const BestSeller = () => {
         {products
           .filter((product) => product.inStock)
           .slice(0, 5)
-          .map((product, index) => (
-            <ProductCard key={index} product={product} />
-          ))}
+          .map((product, index) => {
+            console.log("🛍️ Rendering product:", product.name);
+            return <ProductCard key={index} product={product} />;
+          })}
       </div>
     </div>
   );

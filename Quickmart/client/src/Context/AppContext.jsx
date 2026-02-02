@@ -5,14 +5,19 @@ import axios from "axios";
 
 // Configure axios with backend URL strictly from environment
 const rawBackendUrl = import.meta.env.VITE_BACKEND_URL;
-const backendUrl = rawBackendUrl ? rawBackendUrl.replace(/\/+$/, "") : rawBackendUrl;
+let backendUrl = rawBackendUrl ? rawBackendUrl.replace(/\/+$/, "") : rawBackendUrl;
+
+// FAIL-SAFE: If deployed on Render but URL still says localhost or is missing, force the correct URL
+if (window.location.hostname !== "localhost") {
+  if (!backendUrl || backendUrl.includes("localhost")) {
+    console.warn("⚠️ Production URL mismatch detected! Forcing correct backend URL.");
+    backendUrl = "https://quickmart-nw62.onrender.com";
+  }
+}
 
 if (!backendUrl) {
   console.error("❌ VITE_BACKEND_URL is MISSING! API requests will fail.");
   console.log("Tip: Set VITE_BACKEND_URL in your Render Environment Variables.");
-} else if (backendUrl.includes("localhost") && window.location.hostname !== "localhost") {
-  console.warn("⚠️ WARNING: Frontend is deployed but VITE_BACKEND_URL still points to localhost!");
-  console.log("Current backendUrl value:", backendUrl);
 } else {
   console.log("✅ API base URL initialized:", backendUrl);
 }

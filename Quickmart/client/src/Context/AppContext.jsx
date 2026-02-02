@@ -3,8 +3,15 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+// Configure axios with backend URL from environment
+const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:5000",
+  withCredentials: true,
+});
+
+// Set axios defaults as fallback
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 export const AppContext = createContext();
 
@@ -56,15 +63,28 @@ export const AppContextProvider = ({ children }) => {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get("/api/product/list");
+      const response = await axios.get("/api/product/list");
+      const { data } = response;
 
-      if (data.success) {
+      console.log("Product API Response:", data);
+
+      if (data && data.success && data.products) {
+        console.log("Setting products from data.products:", data.products);
         SetProducts(data.products);
+      } else if (data && Array.isArray(data.products)) {
+        console.log("Setting products from data.products (array check):", data.products);
+        SetProducts(data.products);
+      } else if (Array.isArray(data)) {
+        // Fallback if response is directly the array
+        console.log("Setting products from data (direct array):", data);
+        SetProducts(data);
       } else {
-        toast.error(data.message);
+        console.warn("Unexpected product response format:", data);
       }
     } catch (error) {
-      toast.error(error.message);
+      console.error("Error fetching products:", error);
+      console.error("Error response:", error.response?.data);
+      toast.error(error.response?.data?.message || error.message || "Failed to fetch products");
     }
   };
 

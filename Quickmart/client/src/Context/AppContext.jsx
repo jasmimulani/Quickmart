@@ -3,15 +3,22 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-// Configure axios with backend URL from environment
+// Configure axios with backend URL strictly from environment
+const rawBackendUrl = import.meta.env.VITE_BACKEND_URL;
+const backendUrl = rawBackendUrl ? rawBackendUrl.replace(/\/+$/, "") : rawBackendUrl;
+if (!backendUrl) {
+  console.error("VITE_BACKEND_URL is not set. Set this environment variable to your backend URL.");
+}
+console.log("API base URL:", backendUrl);
+
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:5000",
+  baseURL: backendUrl,
   withCredentials: true,
 });
 
-// Set axios defaults as fallback
+// Also align global axios defaults to the same URL
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+axios.defaults.baseURL = backendUrl;
 
 export const AppContext = createContext();
 
@@ -33,7 +40,7 @@ export const AppContextProvider = ({ children }) => {
   //  fetch seller satus
   const fetchSeller = async () => {
     try {
-      const { data } = await axios.get("/api/seller/is-auth");
+      const { data } = await axiosInstance.get("/api/seller/is-auth");
       if (data.success) {
         setIsSeller(true);
         setSellerProfile(data.profile || null);
@@ -51,7 +58,7 @@ export const AppContextProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get("/api/user/is-auth");
+      const { data } = await axiosInstance.get("/api/user/is-auth");
       if (data.success) setUser(data.user);
       SetCartItems(data.user.cartItems);
     } catch (error) {
@@ -63,23 +70,16 @@ export const AppContextProvider = ({ children }) => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("/api/product/list");
+      const response = await axiosInstance.get("/api/product/list");
       const { data } = response;
 
-      console.log("Product API Response:", data);
-
       if (data && data.success && data.products) {
-        console.log("Setting products from data.products:", data.products);
         SetProducts(data.products);
       } else if (data && Array.isArray(data.products)) {
-        console.log("Setting products from data.products (array check):", data.products);
         SetProducts(data.products);
       } else if (Array.isArray(data)) {
         // Fallback if response is directly the array
-        console.log("Setting products from data (direct array):", data);
         SetProducts(data);
-      } else {
-        console.warn("Unexpected product response format:", data);
       }
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -182,7 +182,7 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => {
     const updateCart = async () => {
       try {
-        const { data } = await axios.post("/api/cart/update", { cartItems });
+        const { data } = await axiosInstance.post("/api/cart/update", { cartItems });
         if (!data.success) {
           toast.error(data.message);
         }
@@ -215,7 +215,7 @@ export const AppContextProvider = ({ children }) => {
     SetSearchQuery,
     getCartAmount,
     getCartCount,
-    axios,
+    axios: axiosInstance,
     fetchProducts,
     SetCartItems,
   };

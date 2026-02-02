@@ -6,10 +6,16 @@ import axios from "axios";
 // Configure axios with backend URL strictly from environment
 const rawBackendUrl = import.meta.env.VITE_BACKEND_URL;
 const backendUrl = rawBackendUrl ? rawBackendUrl.replace(/\/+$/, "") : rawBackendUrl;
+
 if (!backendUrl) {
-  console.error("VITE_BACKEND_URL is not set. Set this environment variable to your backend URL.");
+  console.error("❌ VITE_BACKEND_URL is MISSING! API requests will fail.");
+  console.log("Tip: Set VITE_BACKEND_URL in your Render Environment Variables.");
+} else if (backendUrl.includes("localhost") && window.location.hostname !== "localhost") {
+  console.warn("⚠️ WARNING: Frontend is deployed but VITE_BACKEND_URL still points to localhost!");
+  console.log("Current backendUrl value:", backendUrl);
+} else {
+  console.log("✅ API base URL initialized:", backendUrl);
 }
-console.log("API base URL:", backendUrl);
 
 const axiosInstance = axios.create({
   baseURL: backendUrl,

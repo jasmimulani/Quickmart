@@ -6,7 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import connectDB from "./Configs/db.js";
-import connectCloudinary from "./Configs/cloudinary.js";
+import connectCloudinary from "./Configs/clodinary.js";
 
 import userRouter from "./routes/userRoute.js";
 import sellerRouter from "./routes/sellerRoute.js";
@@ -48,9 +48,6 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 }));
 
-// Handle preflight requests
-app.options("*", cors());
-
 // Serve frontend static files (for production)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -73,8 +70,10 @@ app.use("/api/contact", contactRouter);
 app.use("/api/logs", logsRouter);
 
 // For production: serve frontend index.html for unknown routes
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// Keep wildcard at the very end - after all other routes
+app.use((req, res) => {
+  const indexPath = path.join(__dirname, "public", "index.html");
+  res.sendFile(indexPath);
 });
 
 // ======================
@@ -88,11 +87,11 @@ const startServer = async () => {
     await connectCloudinary();
 
     app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
-      console.log(`✅ CORS enabled for: http://localhost:5173, https://quickmart-frontend-sntg.onrender.com`);
+      console.log(`Server running on port ${PORT}`);
+      console.log(` CORS enabled for: http://localhost:5173, https://quickmart-frontend-sntg.onrender.com`);
     });
   } catch (error) {
-    console.error("❌ Server failed to start:", error.message);
+    console.error(" Server failed to start:", error.message);
     process.exit(1);
   }
 };

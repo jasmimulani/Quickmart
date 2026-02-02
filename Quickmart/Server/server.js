@@ -93,7 +93,7 @@ app.use("*", (req, res) => {
 // SERVER START - DYNAMIC PORT ALLOCATION
 // ======================
 const findAvailablePort = async (startPort) => {
-  const net = require('net');
+  const { default: net } = await import('net');
   
   return new Promise((resolve, reject) => {
     const server = net.createServer();

@@ -96,20 +96,20 @@ const PORT = process.env.PORT || 5555;
 
 const startServer = async () => {
   try {
-    console.log("🔄 Connecting to database...");
+    console.log(" Connecting to database...");
     await connectDB();
-    console.log("✅ Database connected successfully");
+    console.log(" Database connected successfully");
     
-    console.log("🔄 Connecting to Cloudinary...");
+    console.log(" Connecting to Cloudinary...");
     await connectCloudinary();
-    console.log("✅ Cloudinary connected successfully");
+    console.log(" Cloudinary connected successfully");
 
     app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
-      console.log(`🌐 CORS enabled for: http://localhost:5173, https://quickmart-frontend-sntg.onrender.com`);
+      console.log(` Server running on port ${PORT}`);
+      console.log(` CORS enabled for: http://localhost:5173, https://quickmart-frontend-sntg.onrender.com`);
     });
   } catch (error) {
-    console.error("❌ Server failed to start:", error.message);
+    console.error(" Server failed to start:", error.message);
     process.exit(1);
   }
 };

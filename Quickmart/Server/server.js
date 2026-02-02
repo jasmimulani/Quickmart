@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import connectDB from "./Configs/db.js";
 import connectCloudinary from "./Configs/clodinary.js";
@@ -20,36 +22,42 @@ dotenv.config();
 
 const app = express();
 
-/* ======================
-   STRIPE WEBHOOK (RAW BODY)
-   ====================== */
+// ======================
+// STRIPE WEBHOOK (RAW BODY)
+// ======================
 app.post(
   "/stripe",
   express.raw({ type: "application/json" }),
   Stripewebhooks
 );
 
-/* ======================
-   MIDDLEWARES
-   ====================== */
+// ======================
+// MIDDLEWARES
+// ======================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// CORS configuration
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL || "http://localhost:5173",
-    ],
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
 
-/* ======================
-   ROUTES
-   ====================== */
+// Serve frontend static files (for production)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, "public"))); // serve CSS, images, JS etc.
+
+// ======================
+// ROUTES
+// ======================
 app.get("/", (req, res) => {
-  res.status(200).send("API is working ");
+  res.status(200).send("API is working");
 });
 
 app.use("/api/user", userRouter);
@@ -61,9 +69,14 @@ app.use("/api/order", orderRoute);
 app.use("/api/contact", contactRouter);
 app.use("/api/logs", logsRouter);
 
-/* ======================
-   SERVER START
-   ====================== */
+// For production: serve frontend index.html for unknown routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ======================
+// SERVER START
+// ======================
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {

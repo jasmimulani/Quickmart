@@ -17,8 +17,10 @@ const getBackendUrl = () => {
     return window.location.origin;
   }
   
-  // Development fallback - updated to port 5555
-  return "http://localhost:5555";
+  // For development, try common backend ports
+  const commonPorts = [5555, 5000, 5001, 5002, 8000, 3000];
+  
+  return `http://localhost:${commonPorts[0]}`;
 };
 
 const backendUrl = getBackendUrl();

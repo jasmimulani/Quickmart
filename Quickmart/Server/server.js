@@ -90,12 +90,31 @@ app.use("*", (req, res) => {
 });
 
 // ======================
-// SERVER START
+// SERVER START - DYNAMIC PORT ALLOCATION
 // ======================
-const PORT = process.env.PORT || 5555;
+const findAvailablePort = async (startPort) => {
+  const net = require('net');
+  
+  return new Promise((resolve, reject) => {
+    const server = net.createServer();
+    
+    server.listen(startPort, () => {
+      const port = server.address().port;
+      server.close(() => resolve(port));
+    });
+    
+    server.on('error', () => {
+      // Port is in use, try next port
+      findAvailablePort(startPort + 1).then(resolve).catch(reject);
+    });
+  });
+};
 
 const startServer = async () => {
   try {
+    // Find an available port starting from 5555
+    const PORT = process.env.PORT || await findAvailablePort(5555);
+    
     console.log(" Connecting to database...");
     await connectDB();
     console.log(" Database connected successfully");
@@ -107,6 +126,7 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(` Server running on port ${PORT}`);
       console.log(` CORS enabled for: http://localhost:5173, https://quickmart-frontend-sntg.onrender.com`);
+      console.log(` Local API URL: http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error(" Server failed to start:", error.message);

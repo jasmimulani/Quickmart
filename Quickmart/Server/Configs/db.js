@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb+srv://jasmimulani:jasmi%402255@cluster0.cqsp8.mongodb.net/QuickMart";
     
     if (!mongoUri) {
       throw new Error("MongoDB URI not found in environment variables. Please set MONGODB_URI");

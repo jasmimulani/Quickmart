@@ -20,19 +20,19 @@ const ContactUs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email,contact, message } = formData;
+    const { name, email, contact, message } = formData;
 
-    if (!name.trim() || !email.trim() || !contact.trim()||!message.trim()) {
+    if (!name.trim() || !email.trim() || !contact.trim() || !message.trim()) {
       toast.error("Please fill in all fields");
       return;
     }
 
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/contact/contact", { name, email,contact, message  });
+      const { data } = await axios.post("/api/contact/contact", { name, email, contact, message });
       if (data.success) {
         toast.success("Thanks for contacting QuickMart!");
-        setFormData({ name: "", email: "", message: "" , contact: "" });
+        setFormData({ name: "", email: "", message: "", contact: "" });
       } else {
         toast.error(data.message || "Something went wrong. Try again later.");
       }
@@ -58,7 +58,7 @@ const ContactUs = () => {
       >
         <h1 style={{ fontSize: "48px", marginBottom: "10px" }}>Contact QuickMart</h1>
         <p style={{ fontSize: "18px", maxWidth: "700px", margin: "0 auto" }}>
-          Have a question, feedback, or need help? We’re here to assist you.
+          Have a question, feedback, or need help? We're here to assist you.
         </p>
       </section>
 
@@ -97,14 +97,13 @@ const ContactUs = () => {
               placeholder="your@email.com"
               required
             />
-
-             <FormField
+            <FormField
               label="contact"
               type="text"
               name="contact"
               value={formData.contact}
               onChange={handleChange}
-              placeholder= "Your contact number"
+              placeholder="Your contact number"
               required
             />
             <div style={{ marginBottom: "20px" }}>
@@ -166,7 +165,6 @@ const ContactUs = () => {
   );
 };
 
-/* Reusable Input Field */
 const FormField = ({ label, type, name, value, onChange, placeholder, required }) => (
   <div style={{ marginBottom: "20px" }}>
     <label style={labelStyle}>{label}</label>

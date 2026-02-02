@@ -10,16 +10,16 @@ let backendUrl = rawBackendUrl ? rawBackendUrl.replace(/\/+$/, "") : rawBackendU
 // FAIL-SAFE: If deployed on Render but URL still says localhost or is missing, force the correct URL
 if (window.location.hostname !== "localhost") {
   if (!backendUrl || backendUrl.includes("localhost")) {
-    console.warn("⚠️ Production URL mismatch detected! Forcing correct backend URL.");
+    console.warn(" Production URL mismatch detected! Forcing correct backend URL.");
     backendUrl = "https://quickmart-nw62.onrender.com";
   }
 }
 
 if (!backendUrl) {
-  console.error("❌ VITE_BACKEND_URL is MISSING! API requests will fail.");
+  console.error(" VITE_BACKEND_URL is MISSING! API requests will fail.");
   console.log("Tip: Set VITE_BACKEND_URL in your Render Environment Variables.");
 } else {
-  console.log("✅ API base URL initialized:", backendUrl);
+  console.log(" API base URL initialized:", backendUrl);
 }
 
 const axiosInstance = axios.create({

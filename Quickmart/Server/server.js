@@ -39,23 +39,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // ======================
-// CORS CONFIGURATION - SIMPLIFIED & FIXED
+// CORS CONFIGURATION - FINAL FIX
 // ======================
-const allowedOrigins = [
-  "http://localhost:5173", // Local development
-  "https://quickmart-frontend-sntg.onrender.com", // Your production frontend
-];
-
 app.use(cors({
-  origin: allowedOrigins,
+  origin: ["http://localhost:5173", "https://quickmart-frontend-sntg.onrender.com"],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 }));
+
+// Handle preflight requests
+app.options("*", cors());
 
 // Serve frontend static files (for production)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 app.use(express.static(path.join(__dirname, "public")));
 
 // ======================
@@ -91,7 +89,7 @@ const startServer = async () => {
 
     app.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
-      console.log(`✅ Allowed origins: ${allowedOrigins.join(", ")}`);
+      console.log(`✅ CORS enabled for: http://localhost:5173, https://quickmart-frontend-sntg.onrender.com`);
     });
   } catch (error) {
     console.error("❌ Server failed to start:", error.message);

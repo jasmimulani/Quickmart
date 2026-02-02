@@ -59,7 +59,17 @@ app.use(cors({
       return callback(null, true);
     }
     
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'production') {
+    // Explicitly allow the deployed frontend
+    if (origin === "https://quickmart-frontend-sntg.onrender.com") {
+      return callback(null, true);
+    }
+    
+    // Allow any origin in production (for Render deployment)
+    if (process.env.NODE_ENV === 'production') {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

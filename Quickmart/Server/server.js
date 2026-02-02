@@ -92,7 +92,7 @@ app.use("*", (req, res) => {
 // ======================
 // SERVER START
 // ======================
-const PORT = process.env.PORT || 6969;
+const PORT = process.env.PORT || 5173;
 
 const startServer = async () => {
   try {

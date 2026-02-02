@@ -64,6 +64,15 @@ app.get("/", (req, res) => {
   res.status(200).send("API is working");
 });
 
+// Health check endpoint for keeping service awake
+app.get("/health", (req, res) => {
+  res.status(200).json({ 
+    status: "OK", 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 app.use("/api/user", userRouter);
 app.use("/api/seller", sellerRouter);
 app.use("/api/product", productRoute);

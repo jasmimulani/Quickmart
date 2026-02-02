@@ -29,8 +29,28 @@ console.log("🌐 Environment:", import.meta.env.MODE);
 const axiosInstance = axios.create({
   baseURL: backendUrl,
   withCredentials: true,
-  timeout: 10000, // Add timeout for better error handling
+  timeout: 30000, // Increased to 30 seconds for Render cold starts
 });
+
+// Add retry interceptor
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Retry on timeout or network error
+    if ((error.code === 'ECONNABORTED' || error.message.includes('Network Error')) && !originalRequest._retry) {
+      originalRequest._retry = true;
+      console.log("🔄 Retrying request due to timeout...");
+      
+      // Wait 2 seconds and retry
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return axiosInstance(originalRequest);
+    }
+    
+    return Promise.reject(error);
+  }
+);
 
 // Also align global axios defaults
 axios.defaults.baseURL = backendUrl;

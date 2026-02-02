@@ -71,7 +71,7 @@ app.use("/api/logs", logsRouter);
 
 // For production: serve frontend index.html for unknown routes
 // Keep wildcard at the very end - after all other routes
-app.use((req, res) => {
+app.use("*", (req, res) => {
   const indexPath = path.join(__dirname, "public", "index.html");
   res.sendFile(indexPath);
 });

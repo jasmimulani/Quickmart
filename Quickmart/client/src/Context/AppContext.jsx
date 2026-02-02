@@ -17,8 +17,8 @@ const getBackendUrl = () => {
     return window.location.origin;
   }
   
-  // Development fallback - updated to port 3000
-  return "http://localhost:3000";
+  // Development fallback - updated to port 6969
+  return "http://localhost:6969";
 };
 
 const backendUrl = getBackendUrl();

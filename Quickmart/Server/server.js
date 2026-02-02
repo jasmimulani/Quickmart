@@ -52,11 +52,6 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 }));
 
-// Serve frontend static files (for production)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, "public")));
-
 // ======================
 // ROUTES
 // ======================
@@ -81,13 +76,6 @@ app.use("/api/address", addressRouter);
 app.use("/api/order", orderRoute);
 app.use("/api/contact", contactRouter);
 app.use("/api/logs", logsRouter);
-
-// For production: serve frontend index.html for unknown routes
-// Keep wildcard at the very end - after all other routes
-app.use("*", (req, res) => {
-  const indexPath = path.join(__dirname, "public", "index.html");
-  res.sendFile(indexPath);
-});
 
 // ======================
 // SERVER START - DYNAMIC PORT ALLOCATION

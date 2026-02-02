@@ -6,7 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import connectDB from "./Configs/db.js";
-import connectCloudinary from "./Configs/cloudinary.js"; // Fixed typo
+import connectCloudinary from "./Configs/cloudinary.js";
 
 import userRouter from "./routes/userRoute.js";
 import sellerRouter from "./routes/sellerRoute.js";
@@ -39,42 +39,24 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // ======================
-// CORS CONFIGURATION - FIXED
+// CORS CONFIGURATION - SIMPLIFIED & FIXED
 // ======================
 const allowedOrigins = [
   "http://localhost:5173", // Local development
   "https://quickmart-frontend-sntg.onrender.com", // Your production frontend
 ];
 
-// Function to check if origin is allowed
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      // For debugging, log the origin that's being blocked
-      console.log(`CORS blocked origin: ${origin}`);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+app.use(cors({
+  origin: allowedOrigins,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
-};
-
-app.use(cors(corsOptions));
-
-// Handle preflight requests
-app.options("*", cors(corsOptions));
+}));
 
 // Serve frontend static files (for production)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(express.static(path.join(__dirname, "public"))); // serve CSS, images, JS etc.
+app.use(express.static(path.join(__dirname, "public")));
 
 // ======================
 // ROUTES
@@ -98,17 +80,6 @@ app.get("*", (req, res) => {
 });
 
 // ======================
-// ERROR HANDLING MIDDLEWARE
-// ======================
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    message: err.message || "Internal Server Error",
-    error: process.env.NODE_ENV === "development" ? err.stack : {}
-  });
-});
-
-// ======================
 // SERVER START
 // ======================
 const PORT = process.env.PORT || 5000;
@@ -119,11 +90,11 @@ const startServer = async () => {
     await connectCloudinary();
 
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-      console.log(`Allowed origins: ${allowedOrigins.join(", ")}`);
+      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`✅ Allowed origins: ${allowedOrigins.join(", ")}`);
     });
   } catch (error) {
-    console.error("Server failed to start:", error.message);
+    console.error("❌ Server failed to start:", error.message);
     process.exit(1);
   }
 };

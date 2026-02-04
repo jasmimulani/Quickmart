@@ -78,12 +78,12 @@ const Navbar = () => {
             >
               Contact
             </NavLink>
-            {/* <NavLink 
+            <NavLink 
               to="/seller" 
               className={({isActive}) => `font-medium transition-colors duration-200 ${isActive ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
             >
               Seller
-            </NavLink> */}
+            </NavLink>
 
             {/* Search Bar */}
             <div className="relative">

@@ -168,6 +168,11 @@ export const AppContextProvider = ({ children }) => {
 
   // Remove product from cart
   const removeFromCart = (itemId) => {
+    if (!itemId) {
+      console.error("Invalid itemId provided to removeFromCart");
+      return;
+    }
+    
     let cartData = { ...cartItems };
     if (cartData[itemId]) {
       cartData[itemId] -= 1;

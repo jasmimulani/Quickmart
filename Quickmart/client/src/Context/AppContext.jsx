@@ -25,8 +25,8 @@ const getBackendUrl = () => {
 
 const backendUrl = getBackendUrl();
 
-console.log("🌐 API Base URL:", backendUrl);
-console.log("🌐 Environment:", import.meta.env.MODE);
+console.log(" API Base URL:", backendUrl);
+console.log("Environment:", import.meta.env.MODE);
 
 const axiosInstance = axios.create({
   baseURL: backendUrl,
@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
     // Retry on timeout or network error
     if ((error.code === 'ECONNABORTED' || error.message.includes('Network Error')) && !originalRequest._retry) {
       originalRequest._retry = true;
-      console.log("🔄 Retrying request due to timeout...");
+      console.log("Retrying request due to timeout...");
       
       // Wait 2 seconds and retry
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -108,25 +108,25 @@ export const AppContextProvider = ({ children }) => {
   // Fetch products
   const fetchProducts = async () => {
     try {
-      console.log("🔄 Fetching products...");
+      console.log(" Fetching products...");
       const response = await axiosInstance.get("/api/product/list");
       const { data } = response;
-      console.log("📦 Raw API response:", data);
+      console.log(" Raw API response:", data);
 
       if (data && data.success && data.products) {
-        console.log("✅ Products found:", data.products.length);
+        console.log("Products found:", data.products.length);
         SetProducts(data.products);
       } else if (data && Array.isArray(data.products)) {
-        console.log("✅ Products array found:", data.products.length);
+        console.log(" Products array found:", data.products.length);
         SetProducts(data.products);
       } else if (Array.isArray(data)) {
-        console.log("✅ Direct array found:", data.length);
+        console.log(" Direct array found:", data.length);
         SetProducts(data);
       } else {
-        console.log("❌ No products found in response");
+        console.log("No products found in response");
       }
     } catch (error) {
-      console.error("❌ Error fetching products:", error);
+      console.error(" Error fetching products:", error);
       toast.error("Failed to fetch products");
     }
   };

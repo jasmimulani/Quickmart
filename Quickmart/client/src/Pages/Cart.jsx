@@ -7,7 +7,7 @@ const Cart = () => {
   const {
     products,
     currency,
-    removeFromeCart,
+    removeFromCart,
     cartItems,
     getCartCount,
     updateCartItem,
@@ -186,7 +186,7 @@ const Cart = () => {
               {product.offerprice * product.quantity}
             </p>
             <button
-              onClick={() => removeFromeCart(product._id)}
+              onClick={() => removeFromCart(product._id)}
               className="cursor-pointer mx-auto"
             >
               <img

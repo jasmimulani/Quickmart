@@ -19,7 +19,7 @@ const SellerLogin = () => {
           console.log('Setting profile:', data.profile); // Debug log
           setSellerProfile(data.profile);
         }
-        navigate('/seller/dashboard');
+        navigate('/seller');
       } else {
         toast.error(data.message);
       }
